@@ -13,12 +13,15 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  late StreamController<DetailsModel> streamController = StreamController();
+  late StreamController<DetailsModel> streamController;
   @override
   void initState() {
+    streamController = StreamController();
+
     Timer.periodic(Duration(microseconds: 300), (timer) {
       fetchAlbum();
     });
+
     super.initState();
   }
 
@@ -26,7 +29,7 @@ class _DetailScreenState extends State<DetailScreen> {
     // print(widget.uid);
     //http://13.235.241.13/getgames/cricket
     //http://139.59.82.99:3000/api/match/getMatchScore?eventId=30589258
-
+    //30595134
     try {
       final response = await http.get(
         Uri.parse(
@@ -38,14 +41,25 @@ class _DetailScreenState extends State<DetailScreen> {
       if (response.statusCode == 200) {
         // print(jsonDecode(response.body));
         // print(jsonDecode(response.body)['result']);
+
         streamController
             .add(DetailsModel.fromJson(jsonDecode(response.body)['result']));
+      } else if (response.statusCode == 202) {
+        streamController.addError(
+          new Exception("Failed to load the data"),
+        );
       } else {
-        throw Exception('Failed to load the Data');
+        throw Exception('Failed to load the data');
       }
     } catch (e) {
-      print(e);
+      return e;
     }
+  }
+
+  @override
+  void dispose() {
+    streamController.close();
+    super.dispose();
   }
 
   @override
@@ -99,6 +113,10 @@ class _DetailScreenState extends State<DetailScreen> {
                     Text("tt : - ${model.home.tt!}"),
                   ],
                 ),
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('Something went wrong!'),
               );
             } else {
               return Center(

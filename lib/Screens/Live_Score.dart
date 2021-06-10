@@ -12,19 +12,35 @@ class LiveScore extends StatefulWidget {
 }
 
 class _LiveScoreState extends State<LiveScore> {
-  Future<List<dynamic>> fetchMatches() async {
+  Future fetchMatches() async {
     //http://13.235.241.13/getgames/cricket
     //http://139.59.82.99:3000/api/match/getMatchScore?eventId=30589258
 
-    final response =
-        await http.get(Uri.http('13.235.241.13', '/getgames/cricket'));
+    try {
+      final response =
+          await http.get(Uri.http('13.235.241.13', '/getgames/cricket'));
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body)['data'];
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body)['data'];
 
-      // return DataGet.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to load data');
+        // return DataGet.fromJson(jsonDecode(response.body));
+      }
+    } catch (e) {
+      return showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('OOps! Something went wrong.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Okay'),
+                ),
+              ],
+            );
+          });
     }
   }
 
