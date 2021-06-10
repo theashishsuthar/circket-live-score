@@ -262,10 +262,13 @@ class _LiveScoreState extends State<LiveScore> {
                       onTap: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (BuildContext context) {
-                          return ScoreDetailScreen();
-                          //  DetailScreen(
-                          //   uid: _list[index].uid,
-                          // );
+                          return
+                              // ScoreDetailScreen(
+                              //   uid: _list[index].uid,
+                              // );
+                              DetailScreen(
+                            uid: _list[index].uid,
+                          );
                         }));
                       },
                       child: MatchCard(
@@ -391,6 +394,7 @@ class _UpcomingMatchesState extends State<UpcomingMatches> {
             });
             _list.removeAt(0);
             return ListView.builder(
+
                 // shrinkWrap: true,
                 physics: AlwaysScrollableScrollPhysics(),
                 itemCount: _list.length,
@@ -399,8 +403,7 @@ class _UpcomingMatchesState extends State<UpcomingMatches> {
                       onTap: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (BuildContext context) {
-                          return 
-                          DetailScreen(
+                          return DetailScreen(
                             uid: _list[index].uid,
                           );
                         }));

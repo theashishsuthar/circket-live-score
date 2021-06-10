@@ -79,17 +79,23 @@ class _MatchCardState extends State<MatchCard> {
                           backgroundColor: Colors.black,
                           radius: 15,
                           child: Text(
-                            circleTitle,
+                            circleTitle.substring(0, 2),
                             style: TextStyle(fontSize: 12, color: Colors.white),
                           ),
                         ),
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.01,
                         ),
-                        Text(
-                          title,
-                          style: TextStyle(
-                            fontSize: 14,
+                        Container(
+                          alignment: Alignment.center,
+                          width: MediaQuery.of(context).size.width * 0.14,
+                          child: Text(
+                            title,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.fade,
+                            style: TextStyle(
+                              fontSize: 14,
+                            ),
                           ),
                         )
                       ],
@@ -149,7 +155,7 @@ class _MatchCardState extends State<MatchCard> {
                             backgroundColor: Colors.black,
                             radius: 15,
                             child: Text(
-                              circleTitle,
+                              circleTitle.substring(0, 2),
                               style:
                                   TextStyle(fontSize: 12, color: Colors.white),
                             ),
@@ -157,11 +163,16 @@ class _MatchCardState extends State<MatchCard> {
                           SizedBox(
                             width: MediaQuery.of(context).size.width * 0.01,
                           ),
-                          Text(
-                            title,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 14,
+                          Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.of(context).size.width * 0.14,
+                            child: Text(
+                              title,
+                              overflow: TextOverflow.fade,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 14,
+                              ),
                             ),
                           )
                         ],
@@ -323,7 +334,12 @@ class _MatchCardState extends State<MatchCard> {
                           alignment: Alignment.center,
                           color: Colors.pink,
                           child: Text(
-                            model.home.rt!.split(',')[0],
+                            double.tryParse(model.home.rt!
+                                        .split(',')[0]
+                                        .toString()) !=
+                                    null
+                                ? model.home.rt!.split(',')[0]
+                                : model.home.rt!.split(',')[1],
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
@@ -333,7 +349,12 @@ class _MatchCardState extends State<MatchCard> {
                           alignment: Alignment.center,
                           color: Colors.pink,
                           child: Text(
-                           model.home.rt!.split(',')[1],
+                           int.tryParse(model.home.rt!
+                                        .split(',')[0]
+                                        .toString()) !=
+                                    null
+                                ? model.home.rt!.split(',')[1]
+                                : model.home.rt!.split(',')[2],
                             style: TextStyle(color: Colors.white),
                           ),
                         )

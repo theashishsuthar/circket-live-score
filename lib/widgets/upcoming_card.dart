@@ -60,6 +60,11 @@ class _UpComingMatchCardState extends State<UpComingMatchCard> {
       return e;
     }
   }
+  @override
+  void dispose() {
+   streamController!.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -211,7 +216,18 @@ class _UpComingMatchCardState extends State<UpComingMatchCard> {
                       ),
                     ));
               } else {
-                return Container();
+                return Container(
+                  alignment: Alignment.center,
+                  height: MediaQuery.of(context).size.height * 0.15,
+                  margin: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * 0.02,
+                      vertical: MediaQuery.of(context).size.height * 0.01),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: upcomingCardColor,
+                      borderRadius: BorderRadius.circular(12)),
+                  child: Text('Coming soon'),
+                );
               }
             },
           ),
