@@ -47,32 +47,39 @@ class _SubscriptionState extends State<Subscription> {
               end: Alignment.bottomRight,
               colors: <Color>[startingColor, endingColor])),
       // margin: EdgeInsets.all(MediaQuery.of(context).size.height * 0.02),
-      child: CarouselSlider(
-          options: CarouselOptions(
-            autoPlay: false,
-            aspectRatio: 0.85,
-            enlargeCenterPage: true,
-          ),
-          items: [
-            PricingCard(
+      child:  PricingCard(
               imagePath: 'assets/Images/1.png',
               isMonthly: true,
               duration: 'Monthly',
               price: '100',
             ),
-            // PricingCard(
-            //   imagePath: 'assets/Images/2.png',
-            //   isMonthly: false,
-            //   duration: 'Anually',
-            //   price: '500',
-            // ),
-            // PricingCard(
-            //   imagePath: 'assets/Images/0.png',
-            //   isMonthly: false,
-            //   duration: 'Forever',
-            //   price: '0',
-            // ),
-          ]),
+      
+      // CarouselSlider(
+      //     options: CarouselOptions(
+      //       autoPlay: false,
+      //       aspectRatio: 0.85,
+      //       enlargeCenterPage: true,
+      //     ),
+      //     items: [
+      //       PricingCard(
+      //         imagePath: 'assets/Images/1.png',
+      //         isMonthly: true,
+      //         duration: 'Monthly',
+      //         price: '100',
+      //       ),
+      //       // PricingCard(
+      //       //   imagePath: 'assets/Images/2.png',
+      //       //   isMonthly: false,
+      //       //   duration: 'Anually',
+      //       //   price: '500',
+      //       // ),
+      //       // PricingCard(
+      //       //   imagePath: 'assets/Images/0.png',
+      //       //   isMonthly: false,
+      //       //   duration: 'Forever',
+      //       //   price: '0',
+      //       // ),
+      //     ]),
     );
   }
 }

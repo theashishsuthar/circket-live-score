@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter_stack_card/flutter_stack_card.dart';
 
-class DetailScreen extends StatefulWidget {
+class ScoreDetailScreen extends StatefulWidget {
   @override
-  _DetailScreenState createState() => _DetailScreenState();
+  _ScoreDetailScreenState createState() => _ScoreDetailScreenState();
 }
 
-class _DetailScreenState extends State<DetailScreen> {
+class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
   Widget textWidget(String title1, String title2) {
     return Padding(
       padding: EdgeInsets.all(MediaQuery.of(context).size.height * 0.01),
@@ -22,12 +22,12 @@ class _DetailScreenState extends State<DetailScreen> {
                   fontFamily: "SourceSansPro-Regular",
                   letterSpacing: 0.8,
                   color: Colors.black,
-                  fontSize: 18),
+                  fontSize: 14),
               children: <TextSpan>[
             TextSpan(
               text: title2,
               style: TextStyle(
-                  color: Colors.blueAccent, letterSpacing: 0.8, fontSize: 18),
+                  color: Colors.blueAccent, letterSpacing: 0.8, fontSize: 14),
               // recognizer: TapGestureRecognizer()
               //   ..onTap = () {
               //     // navigate to desired screen
@@ -50,7 +50,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       fontFamily: 'SourceSansPro-Regular',
                       color: Colors.blueAccent,
                       letterSpacing: 0.8,
-                      fontSize: 18),
+                      fontSize: 14),
                   children: <TextSpan>[
                 TextSpan(
                   text: title2,
@@ -58,7 +58,7 @@ class _DetailScreenState extends State<DetailScreen> {
                       fontFamily: "SourceSansPro-Regular",
                       letterSpacing: 0.8,
                       color: Colors.black,
-                      fontSize: 18),
+                      fontSize: 14),
                   // recognizer: TapGestureRecognizer()
                   //   ..onTap = () {
                   //     // navigate to desired screen
@@ -66,8 +66,8 @@ class _DetailScreenState extends State<DetailScreen> {
                 )
               ])),
           Container(
-            height: MediaQuery.of(context).size.height * 0.05,
-            width: MediaQuery.of(context).size.width * 0.10,
+            height: MediaQuery.of(context).size.height * 0.035,
+            width: MediaQuery.of(context).size.width * 0.07,
             margin: EdgeInsets.all(2),
             decoration: BoxDecoration(
                 color: Colors.red[300], borderRadius: BorderRadius.circular(8)),
@@ -75,8 +75,8 @@ class _DetailScreenState extends State<DetailScreen> {
                 child: Text(title3, style: TextStyle(color: Colors.white))),
           ),
           Container(
-            height: MediaQuery.of(context).size.height * 0.05,
-            width: MediaQuery.of(context).size.width * 0.10,
+            height: MediaQuery.of(context).size.height * 0.035,
+            width: MediaQuery.of(context).size.width * 0.07,
             margin: EdgeInsets.all(2),
             decoration: BoxDecoration(
                 color: Colors.green, borderRadius: BorderRadius.circular(8)),
@@ -140,16 +140,19 @@ class _DetailScreenState extends State<DetailScreen> {
           child: Column(
             children: [
               Container(
-                height: MediaQuery.of(context).size.height * 0.22,
+                height: MediaQuery.of(context).size.height * 0.2,
                 width: double.infinity,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
-                      margin: EdgeInsets.all(
-                          MediaQuery.of(context).size.height * 0.01),
-                      height: MediaQuery.of(context).size.height * 0.20,
+                      margin: EdgeInsets.only(
+                        left: MediaQuery.of(context).size.height * 0.01,
+                        right: MediaQuery.of(context).size.height * 0.01,
+                        top: MediaQuery.of(context).size.height * 0.01
+                      ),
+                      height: MediaQuery.of(context).size.height * 0.18,
                       decoration: BoxDecoration(
                           border: Border.all(color: Colors.black, width: 5.0),
                           color: Colors.grey[850]),
@@ -169,13 +172,12 @@ class _DetailScreenState extends State<DetailScreen> {
                                     MediaQuery.of(context).size.height * 0.05,
                                 width: MediaQuery.of(context).size.width * 0.90,
                                 child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    Icon(
-                                      EvaIcons.volumeMuteOutline,
-                                      color: Colors.white,
-                                    ),
+                                    // Icon(
+                                    //   EvaIcons.volumeMuteOutline,
+                                    //   color: Colors.white,
+                                    // ),
                                     Container(
 
                                         // alignment: Alignment.center,
@@ -279,7 +281,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 ),
               ),
               Container(
-                height: MediaQuery.of(context).size.height * 0.13,
+                height: MediaQuery.of(context).size.height * 0.12,
                 width: double.infinity,
                 margin:
                     EdgeInsets.all(MediaQuery.of(context).size.height * 0.01),
@@ -314,7 +316,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 ),
               ),
               Container(
-                height: MediaQuery.of(context).size.height * 0.18,
+                height: MediaQuery.of(context).size.height * 0.15,
                 width: double.infinity,
                 margin:
                     EdgeInsets.all(MediaQuery.of(context).size.height * 0.01),
@@ -348,7 +350,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 ),
               ),
               Container(
-                height: MediaQuery.of(context).size.height * 0.33,
+                height: MediaQuery.of(context).size.height * 0.23,
                 width: double.infinity,
                 margin:
                     EdgeInsets.all(MediaQuery.of(context).size.height * 0.01),
@@ -359,7 +361,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     DataTable(
-                      columnSpacing: 20.0,
+                      columnSpacing: 30.0,
                       columns: const <DataColumn>[
                         DataColumn(
                           label: Text(
@@ -430,24 +432,24 @@ class _DetailScreenState extends State<DetailScreen> {
                             DataCell(Text('0')),
                           ],
                         ),
-                        DataRow(
-                          cells: <DataCell>[
-                            DataCell(Text('Joe Root')), //Current strike batsman
-                            DataCell(Text('500')),
-                            DataCell(Text('100')),
-                            DataCell(Text('20')),
-                            DataCell(Text('30')),
-                            DataCell(Text('0')),
-                          ],
-                        ),
+                        // DataRow(
+                        //   cells: <DataCell>[
+                        //     DataCell(Text('Joe Root')), //Current strike batsman
+                        //     DataCell(Text('500')),
+                        //     DataCell(Text('100')),
+                        //     DataCell(Text('20')),
+                        //     DataCell(Text('30')),
+                        //     DataCell(Text('0')),
+                        //   ],
+                        // ),
                       ],
                     ),
-                    Divider(
-                      thickness: 0.5,
-                      color: Colors.grey,
-                      endIndent: 1,
-                      indent: 1,
-                    ),
+                    // Divider(
+                    //   thickness: 0.5,
+                    //   color: Colors.grey,
+                    //   endIndent: 1,
+                    //   indent: 1,
+                    // ),
                     Padding(
                       padding: EdgeInsets.only(
                           left: MediaQuery.of(context).size.height * 0.03),
@@ -563,28 +565,26 @@ class _DetailScreenState extends State<DetailScreen> {
                           label: Text(
                             'Session',
                             style: TextStyle(
-                                color: Colors.deepPurple,
-                                ),
+                              color: Colors.deepPurple,
+                            ),
                           ),
                         ),
                         DataColumn(
                           label: Text(
                             'Pass/Wkt',
                             style: TextStyle(
-                                color: Colors.deepPurple,
-                              ),
+                              color: Colors.deepPurple,
+                            ),
                           ),
                         ),
                         DataColumn(
                           label: Text(
                             'ODDS',
                             style: TextStyle(
-                                color: Colors.deepPurple,
-                               ),
+                              color: Colors.deepPurple,
+                            ),
                           ),
                         ),
-                        
-                       
                       ],
                       rows: const <DataRow>[
                         DataRow(
@@ -593,7 +593,6 @@ class _DetailScreenState extends State<DetailScreen> {
                             DataCell(Text('')),
                             DataCell(Text('')),
                             DataCell(Text('LANC 28-31')),
-                           
                           ],
                         ),
                         DataRow(
@@ -602,7 +601,6 @@ class _DetailScreenState extends State<DetailScreen> {
                             DataCell(Text('44-85')),
                             DataCell(Text('84/1')),
                             DataCell(Text('LANC 28-31')),
-                        
                           ],
                         ),
                         DataRow(
@@ -611,7 +609,6 @@ class _DetailScreenState extends State<DetailScreen> {
                             DataCell(Text('44-85')),
                             DataCell(Text('84/1')),
                             DataCell(Text('LANC 28-31')),
-                           
                           ],
                         ),
                       ],
