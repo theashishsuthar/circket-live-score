@@ -43,7 +43,7 @@ class MatchCard extends StatelessWidget {
                   ),
                   Padding(
                     padding: EdgeInsets.only(
-                        left: MediaQuery.of(context).size.width * 0.01),
+                        left: MediaQuery.of(context).size.width * 0.03),
                     child: Column(
                       children: [
                         Text(
@@ -62,7 +62,7 @@ class MatchCard extends StatelessWidget {
                   children: [
                     Padding(
                       padding: EdgeInsets.only(
-                          left: MediaQuery.of(context).size.width * 0.01),
+                          left: MediaQuery.of(context).size.width * 0.03,right:MediaQuery.of(context).size.width * 0.03 ),
                       child: Column(
                         children: [
                           Text(

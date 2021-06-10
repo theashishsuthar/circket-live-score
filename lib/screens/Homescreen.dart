@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Tab(
                 child: Row(
                   children: [
-                    Icon(Icons.lock_clock),
+                    Icon(EvaIcons.clockOutline),
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.015,
                     ),
