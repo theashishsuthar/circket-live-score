@@ -60,9 +60,10 @@ class _UpComingMatchCardState extends State<UpComingMatchCard> {
       return e;
     }
   }
+
   @override
   void dispose() {
-   streamController!.close();
+    streamController!.close();
     super.dispose();
   }
 
@@ -226,7 +227,20 @@ class _UpComingMatchCardState extends State<UpComingMatchCard> {
                   decoration: BoxDecoration(
                       color: upcomingCardColor,
                       borderRadius: BorderRadius.circular(12)),
-                  child: Text('Coming soon'),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        widget.title!,
+                        style: specialTitleTextStyle,
+                      ),
+                      Text(widget.time!),
+                      Text(
+                        "coming soon",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ],
+                  ),
                 );
               }
             },

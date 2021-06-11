@@ -22,8 +22,11 @@ class ScoreDetailScreen extends StatefulWidget {
 class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
   // ignore: close_sinks
   StreamController<DetailsModel>? streamController;
+  ScrollController? scrollController;
   @override
   void initState() {
+    scrollController = ScrollController();
+
     streamController = StreamController();
     Timer.periodic(Duration(microseconds: 300), (timer) {
       fetchAlbum(widget.uid!);
@@ -33,6 +36,7 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
 
   void dispose() {
     streamController!.close();
+    scrollController!.dispose();
     super.dispose();
   }
 
@@ -65,6 +69,32 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
     } catch (e) {
       return e;
     }
+  }
+
+  Widget redcard(String data) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.035,
+      width: MediaQuery.of(context).size.width * 0.07,
+      margin: EdgeInsets.all(2),
+      decoration: BoxDecoration(
+          color: Colors.red[300], borderRadius: BorderRadius.circular(8)),
+      child: Center(child: Text(data, style: TextStyle(color: Colors.white))),
+    );
+  }
+
+  Widget greencard(String data) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.035,
+      width: MediaQuery.of(context).size.width * 0.07,
+      margin: EdgeInsets.all(2),
+      decoration: BoxDecoration(
+          color: Colors.green, borderRadius: BorderRadius.circular(8)),
+      child: Center(
+          child: Text(
+        data,
+        style: TextStyle(color: Colors.white),
+      )),
+    );
   }
 
   Widget textWidget(String title1, String title2) {
@@ -152,6 +182,14 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
         stream: streamController!.stream,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
+            WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+              if (scrollController!.hasClients) {
+                scrollController!.animateTo(
+                    scrollController!.position.maxScrollExtent,
+                    duration: Duration(microseconds: 300),
+                    curve: Curves.easeInOut);
+              }
+            });
             DetailsModel model = snapshot.data;
             return Scaffold(
               appBar: AppBar(
@@ -214,12 +252,11 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                           children: [
                             Container(
                               margin: EdgeInsets.only(
-                                  left:
-                                      MediaQuery.of(context).size.height * 0.01,
-                                  right:
-                                      MediaQuery.of(context).size.height * 0.01,
-                                  top: MediaQuery.of(context).size.height *
-                                      0.01),
+                                left: MediaQuery.of(context).size.height * 0.01,
+                                right:
+                                    MediaQuery.of(context).size.height * 0.01,
+                                top: MediaQuery.of(context).size.height * 0.01,
+                              ),
                               height: MediaQuery.of(context).size.height * 0.18,
                               decoration: BoxDecoration(
                                   border: Border.all(
@@ -236,10 +273,11 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                     children: [
                                       Container(
                                         padding: EdgeInsets.symmetric(
-                                            horizontal: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.02),
+                                          horizontal: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.02,
+                                        ),
                                         height:
                                             MediaQuery.of(context).size.height *
                                                 0.05,
@@ -271,17 +309,14 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                       )
                                     ],
                                   ),
-                                  // SizedBox(
-                                  //   width: MediaQuery.of(context).size.width * 0.80,
-                                  //   child:
-                                  // ),
                                   DefaultTextStyle(
                                     style: const TextStyle(
-                                      fontSize: 14.0,
+                                      fontSize: 19.0,
                                       fontFamily: 'SourceSansPro-Regular',
                                     ),
                                     child: AnimatedTextKit(
                                       isRepeatingAnimation: true,
+                                      repeatForever: true,
                                       animatedTexts: [
                                         ScaleAnimatedText(
                                           model.home.cs['msg'] == 'OC'
@@ -301,6 +336,10 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                     ),
                                   ),
                                   Container(
+                                    margin: EdgeInsets.only(
+                                      top: MediaQuery.of(context).size.height *
+                                          0.02,
+                                    ),
                                     padding: EdgeInsets.symmetric(
                                         horizontal:
                                             MediaQuery.of(context).size.width *
@@ -395,7 +434,7 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                           ],
                         ),
                       ),
-                      model.home.i == "i2"
+                      model.home.i == "i2" && model.home.con['mf'] != "Test"
                           ? Container(
                               height: MediaQuery.of(context).size.height * 0.12,
                               width: double.infinity,
@@ -407,20 +446,18 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  model.home.i == "i2"
+                                  model.home.i == "i2" &&
+                                          model.home.con['mf'] != "Test"
                                       ? Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceEvenly,
                                           children: [
                                             textWidget(
                                               'Run needed',
-                                              // ' ${(int.parse(model.home.i2['tr']) - int.parse(model.home.i2['sc'])).toString()}',
-                                              ' ',
+                                              ' ${(int.parse(model.home.i2['tr']) - int.parse(model.home.i2['sc'])).toString()}',
                                             ),
-                                            textWidget(
-                                                'Overs Rem',
-                                                // ' ${(20.0 - double.parse(model.home.i2['ov'])).toString()}'),
-                                                ' '),
+                                            textWidget('Overs Rem',
+                                                ' ${(double.parse(model.home.iov!) - double.parse(model.home.i2['ov'])).toString()}'),
                                           ],
                                         )
                                       : Container(),
@@ -457,18 +494,71 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                textWidget('Fav Team',
-                                    ' ${model.home.rt!.split(",")[0]}'),
-                                textWithBox(
-                                    '${model.home.rt!.split(",")[0]}:',
-                                    ' ',
-                                    '${model.home.rt!.split(",")[1]}',
-                                    '${model.home.rt!.split(",")[2]}')
-                              ],
-                            ),
+                            model.home.con['mf'] == "Test"
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Container(
+                                        child: Column(
+                                          children: [
+                                            Text(model.home.t1['n']),
+                                            Row(
+                                              children: [
+                                                redcard(model.home.rt!
+                                                    .split(",")[0]),
+                                                greencard(model.home.rt!
+                                                    .split(",")[1]),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        child: Column(
+                                          children: [
+                                            Text(model.home.t2['n']),
+                                            Row(
+                                              children: [
+                                                redcard(model.home.rt!
+                                                    .split(",")[2]),
+                                                greencard(model.home.rt!
+                                                    .split(",")[3]),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        child: Column(
+                                          children: [
+                                            Text("Draw"),
+                                            Row(
+                                              children: [
+                                                redcard(model.home.rt!
+                                                    .split(",")[4]),
+                                                greencard(model.home.rt!
+                                                    .split(",")[5]),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      textWidget('Fav Team',
+                                          ' ${model.home.rt!.split(",")[0]}'),
+                                      textWithBox(
+                                          '${model.home.rt!.split(",")[0]}:',
+                                          ' ',
+                                          '${model.home.rt!.split(",")[1]}',
+                                          '${model.home.rt!.split(",")[2]}')
+                                    ],
+                                  ),
                             Divider(
                               thickness: 0.5,
                               color: Colors.grey,
@@ -649,34 +739,45 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Text('Last 24 Balls'),
-                              ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  // shrinkWrap: true,
-                                  // physics: NeverScrollableScrollPhysics(),
-                                  itemCount: model.home.pb!.split(",").length,
-                                  itemBuilder: (BuildContext context, int i) {
-                                    return model.home.pb!.split(",").length == 0
-                                        ? Container()
-                                        : CircleAvatar(
-                                            radius: 18,
-                                            backgroundColor: model.home.pb!
-                                                        .split(",")[i] ==
-                                                    "W"
-                                                ? Colors.red[300]
-                                                : model.home.pb!
+                              Expanded(
+                                child: Container(
+                                  child: ListView.builder(
+                                      controller: scrollController,
+                                      scrollDirection: Axis.horizontal,
+                                      // shrinkWrap: true,
+                                      // physics: NeverScrollableScrollPhysics(),
+                                      itemCount:
+                                          model.home.pb!.split(",").length,
+                                      itemBuilder:
+                                          (BuildContext context, int i) {
+                                        return model.home.pb!
+                                                    .split(",")
+                                                    .length ==
+                                                0
+                                            ? Container()
+                                            : CircleAvatar(
+                                                radius: 18,
+                                                backgroundColor: model.home.pb!
                                                             .split(",")[i] ==
-                                                        '6'
-                                                    ? Colors.purple[300]
+                                                        "W"
+                                                    ? Colors.red[300]
                                                     : model.home.pb!.split(
                                                                 ",")[i] ==
-                                                            '4'
-                                                        ? Colors.green
-                                                        : Colors.green,
-                                            child: Text(
-                                                model.home.pb!.split(",")[i],
-                                                style: subtitleTextStyle2),
-                                          );
-                                  }),
+                                                            '6'
+                                                        ? Colors.purple[300]
+                                                        : model.home.pb!.split(
+                                                                    ",")[i] ==
+                                                                '4'
+                                                            ? Colors.green
+                                                            : Colors.green,
+                                                child: Text(
+                                                    model.home.pb!
+                                                        .split(",")[i],
+                                                    style: subtitleTextStyle2),
+                                              );
+                                      }),
+                                ),
+                              ),
 
                               // CircleAvatar(
                               //   radius: 18,
@@ -844,8 +945,11 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
               ),
             );
           } else {
-            return Center(
-              child: CircularProgressIndicator(),
+            return Container(
+              color: Colors.white,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
             );
           }
         });

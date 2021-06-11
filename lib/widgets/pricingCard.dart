@@ -1,3 +1,4 @@
+import 'package:cricket_live_score/screens/subscriptionHistory.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 
@@ -29,7 +30,7 @@ class PricingCard extends StatelessWidget {
         top: MediaQuery.of(context).size.height * 0.1,
         left: MediaQuery.of(context).size.height * 0.05,
         right: MediaQuery.of(context).size.height * 0.05,
-        bottom: MediaQuery.of(context).size.height * 0.2,
+        bottom: MediaQuery.of(context).size.height * 0.12,
       ),
       // width: MediaQuery.of(context).size.width * 0.15,
       decoration: BoxDecoration(
@@ -160,6 +161,30 @@ class PricingCard extends StatelessWidget {
                 onPressed: () {},
                 child: Text(
                   'Let\'s Get Started',
+                  style: TextStyle(color: Colors.black),
+                )),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width * 0.40,
+            child: ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.white),
+                    // textStyle: MaterialStateProperty.all(TextStyle(fontSize: 15,color: Colors.black)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          side: BorderSide(
+                            color: Colors.green,
+                          )),
+                    )),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (BuildContext context) {
+                    return SubscriptionHistory();
+                  }));
+                },
+                child: Text(
+                  'Subscription History',
                   style: TextStyle(color: Colors.black),
                 )),
           ),

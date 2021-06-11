@@ -253,43 +253,72 @@ class _LiveScoreState extends State<LiveScore> {
                   _list.add(d);
                 }
               });
-              return ListView.builder(
-                  shrinkWrap: true,
-                  physics: AlwaysScrollableScrollPhysics(),
-                  itemCount: _list.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (BuildContext context) {
-                          return
-                              // ScoreDetailScreen(
-                              //   uid: _list[index].uid,
-                              // );
-                              DetailScreen(
-                            uid: _list[index].uid,
-                          );
-                        }));
-                      },
-                      child: MatchCard(
-                        uid: _list[index].uid,
-                        title: _list[index].title,
+              return _list.isEmpty
+                  ? Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(
+                              left: MediaQuery.of(context).size.width * 0.05,
+                              top: MediaQuery.of(context).size.height * 0.08,
+                              right: MediaQuery.of(context).size.width * 0.05,
+                            ),
+                            height: MediaQuery.of(context).size.height * 0.25,
+                            width: double.infinity,
+                            child: Image.asset(
+                              'assets/Images/logo2.png',
+                              scale: 1,
+                            ),
+                          ),
+                          Text(
+                            "No live matches available",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
-                    );
+                    )
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      physics: AlwaysScrollableScrollPhysics(),
+                      itemCount: _list.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(
+                                builder: (BuildContext context) {
+                              return
+                                  // ScoreDetailScreen(
+                                  //   uid: _list[index].uid,
+                                  // );
+                                  DetailScreen(
+                                uid: _list[index].uid,
+                              );
+                            }));
+                          },
+                          child: MatchCard(
+                            uid: _list[index].uid,
+                            title: _list[index].title,
+                          ),
+                        );
 
-                    // return     GestureDetector(
-                    //       onTap: () {},
-                    //       child: Card(
-                    //         shape: RoundedRectangleBorder(
-                    //           borderRadius: BorderRadius.circular(10),
-                    //         ),
-                    //         child: ListTile(
-                    //           title: Text(_list[index].title!.split("/")[0]),
-                    //           subtitle: Text(_list[index].title!.split("/")[1]),
-                    //         ),
-                    //       ),
-                    //     );
-                  });
+                        // return     GestureDetector(
+                        //       onTap: () {},
+                        //       child: Card(
+                        //         shape: RoundedRectangleBorder(
+                        //           borderRadius: BorderRadius.circular(10),
+                        //         ),
+                        //         child: ListTile(
+                        //           title: Text(_list[index].title!.split("/")[0]),
+                        //           subtitle: Text(_list[index].title!.split("/")[1]),
+                        //         ),
+                        //       ),
+                        //     );
+                      });
             } else {
               return Center(
                 child: CircularProgressIndicator(),
@@ -393,6 +422,7 @@ class _UpcomingMatchesState extends State<UpcomingMatches> {
               }
             });
             _list.removeAt(0);
+
             return ListView.builder(
 
                 // shrinkWrap: true,
@@ -403,9 +433,12 @@ class _UpcomingMatchesState extends State<UpcomingMatches> {
                       onTap: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (BuildContext context) {
-                          return DetailScreen(
+                          return ScoreDetailScreen(
                             uid: _list[index].uid,
                           );
+                          // DetailScreen(
+                          //   uid: _list[index].uid,
+                          // );
                         }));
                       },
                       child: UpComingMatchCard(
