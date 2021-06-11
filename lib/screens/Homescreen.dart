@@ -296,7 +296,7 @@ class _LiveScoreState extends State<LiveScore> {
                                   // ScoreDetailScreen(
                                   //   uid: _list[index].uid,
                                   // );
-                                  DetailScreen(
+                                  ScoreDetailScreen(
                                 uid: _list[index].uid,
                               );
                             }));

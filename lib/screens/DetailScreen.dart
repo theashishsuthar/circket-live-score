@@ -698,7 +698,7 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                   left:
                                       MediaQuery.of(context).size.height * 0.02,
                                   right: MediaQuery.of(context).size.height *
-                                      0.02),
+                                      0.01),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
