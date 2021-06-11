@@ -734,11 +734,14 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                                 '(${model.home.pt!.split(",")[1]})')),
                                     style: TextStyle(color: Colors.deepPurple),
                                   ),
-                                  Text(
-                                    "Last wicket:-  " +
-                                        model.home.lw.toString(),
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(color: Colors.deepPurple),
+                                  Container(
+                                    width: MediaQuery.of(context).size.width *0.50,
+                                    child: Text(
+                                      "Last wicket:-  " +
+                                          model.home.lw.toString(),
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(color: Colors.deepPurple),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -761,83 +764,83 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Text('Last 24 Balls'),
-                              // model.home.pb != ""
-                              //     ? Expanded(
-                              //         child: Container(
-                              //           child: ListView.builder(
-                              //               controller: scrollController,
-                              //               scrollDirection: Axis.horizontal,
-                              //               // shrinkWrap: true,
-                              //               // physics: NeverScrollableScrollPhysics(),
-                              //               itemCount: model.home.pb!
-                              //                   .split(",")
-                              //                   .length,
-                              //               itemBuilder:
-                              //                   (BuildContext context, int i) {
-                              //                 return model.home.pb!
-                              //                             .split(",")
-                              //                             .length ==
-                              //                         0
-                              //                     ? Container()
-                              //                     : CircleAvatar(
-                              //                         radius: 18,
-                              //                         backgroundColor: model
-                              //                                     .home.pb!
-                              //                                     .split(
-                              //                                         ",")[i] ==
-                              //                                 "W"
-                              //                             ? Colors.red[300]
-                              //                             : model.home.pb!.split(
-                              //                                         ",")[i] ==
-                              //                                     '6'
-                              //                                 ? Colors
-                              //                                     .purple[300]
-                              //                                 : model.home.pb!.split(
-                              //                                                 ",")[
-                              //                                             i] ==
-                              //                                         '4'
-                              //                                     ? Colors.green
-                              //                                     : Colors
-                              //                                         .green,
-                              //                         child: Text(
-                              //                             model.home.pb!
-                              //                                 .split(",")[i],
-                              //                             style:
-                              //                                 subtitleTextStyle2),
-                              //                       );
-                              //               }),
-                              //         ),
-                              //       )
-                              //     : Container(),
+                              model.home.pb != ""
+                                  ? Expanded(
+                                      child: Container(
+                                        child: ListView.builder(
+                                            controller: scrollController,
+                                            scrollDirection: Axis.horizontal,
+                                            // shrinkWrap: true,
+                                            // physics: NeverScrollableScrollPhysics(),
+                                            itemCount: model.home.pb!
+                                                .split(",")
+                                                .length,
+                                            itemBuilder:
+                                                (BuildContext context, int i) {
+                                              return model.home.pb!
+                                                          .split(",")
+                                                          .length ==
+                                                      0
+                                                  ? Container()
+                                                  : CircleAvatar(
+                                                      radius: 18,
+                                                      backgroundColor: model
+                                                                  .home.pb!
+                                                                  .split(
+                                                                      ",")[i] ==
+                                                              "W"
+                                                          ? Colors.red[300]
+                                                          : model.home.pb!.split(
+                                                                      ",")[i] ==
+                                                                  '6'
+                                                              ? Colors
+                                                                  .purple[300]
+                                                              : model.home.pb!.split(
+                                                                              ",")[
+                                                                          i] ==
+                                                                      '4'
+                                                                  ? Colors.green
+                                                                  : Colors
+                                                                      .green,
+                                                      child: Text(
+                                                          model.home.pb!
+                                                              .split(",")[i],
+                                                          style:
+                                                              subtitleTextStyle2),
+                                                    );
+                                            }),
+                                      ),
+                                    )
+                                  : Container(),
 
-                              // CircleAvatar(
-                              //   radius: 18,
-                              //   backgroundColor: Colors.red[300],
-                              //   child: Text('W', style: subtitleTextStyle2),
-                              // ),
-                              // CircleAvatar(
-                              //   radius: 18,
-                              //   backgroundColor: Colors.green,
-                              //   child: Text('1', style: subtitleTextStyle2),
-                              // ),
-                              // CircleAvatar(
-                              //   radius: 18,
-                              //   backgroundColor: Colors.green,
-                              //   child: Text('1', style: subtitleTextStyle2),
-                              // ),
-                              // CircleAvatar(
-                              //   radius: 18,
-                              //   backgroundColor: Colors.purple[300],
-                              //   child: Text('6', style: subtitleTextStyle2),
-                              // ),
-                              // CircleAvatar(
-                              //   radius: 18,
-                              //   backgroundColor: Colors.grey[600],
-                              //   child: Text(
-                              //     '0',
-                              //     style: subtitleTextStyle2,
-                              //   ),
-                              // )
+                              CircleAvatar(
+                                radius: 18,
+                                backgroundColor: Colors.red[300],
+                                child: Text('W', style: subtitleTextStyle2),
+                              ),
+                              CircleAvatar(
+                                radius: 18,
+                                backgroundColor: Colors.green,
+                                child: Text('1', style: subtitleTextStyle2),
+                              ),
+                              CircleAvatar(
+                                radius: 18,
+                                backgroundColor: Colors.green,
+                                child: Text('1', style: subtitleTextStyle2),
+                              ),
+                              CircleAvatar(
+                                radius: 18,
+                                backgroundColor: Colors.purple[300],
+                                child: Text('6', style: subtitleTextStyle2),
+                              ),
+                              CircleAvatar(
+                                radius: 18,
+                                backgroundColor: Colors.grey[600],
+                                child: Text(
+                                  '0',
+                                  style: subtitleTextStyle2,
+                                ),
+                              )
                             ],
                           ),
                         ),
