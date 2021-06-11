@@ -195,7 +195,7 @@ class _MatchCardState extends State<MatchCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.30,
+      height: MediaQuery.of(context).size.height * 0.26,
       width: double.infinity,
       margin: EdgeInsets.all(MediaQuery.of(context).size.height * 0.01),
       decoration: BoxDecoration(
@@ -363,13 +363,15 @@ class _MatchCardState extends State<MatchCard> {
                     ),
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.02,
+                    height: MediaQuery.of(context).size.height * 0.01,
                   ),
                   Container(
-                    margin: EdgeInsets.only(
-                        right: MediaQuery.of(context).size.width * 0.08),
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.symmetric(
+                      horizontal:  MediaQuery.of(context).size.width * 0.08
+                    ),
                     child: Text(
-                      model.home.con['lt'].toString(),
+                      model.home.con['lt'].toString() ,
                       style: TextStyle(
                         color: endingColor,
                         fontSize: 13,
