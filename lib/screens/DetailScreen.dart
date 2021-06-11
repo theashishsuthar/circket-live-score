@@ -643,38 +643,60 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                 ),
                               ],
                               rows: <DataRow>[
-                                DataRow(
-                                  cells: <DataCell>[
-                                    DataCell(Text(model.home.os == "p1"
-                                        ? '${model.home.p1}*'
-                                        : '${model.home.p1}')),
-                                    DataCell(Text(
-                                        '${model.home.b1s!.split(",")[0]}')),
-                                    DataCell(Text(
-                                        '${model.home.b1s!.split(",")[1]}')),
-                                    DataCell(Text(
-                                        '${model.home.b1s!.split(",")[2]}')),
-                                    DataCell(Text(
-                                        '${model.home.b1s!.split(",")[3]}')),
-                                    DataCell(Text('0')),
-                                  ],
-                                ),
-                                DataRow(
-                                  cells: <DataCell>[
-                                    DataCell(Text(model.home.os == "p2"
-                                        ? '${model.home.p2}*'
-                                        : '${model.home.p2}')),
-                                    DataCell(Text(
-                                        '${model.home.b2s!.split(",")[0]}')),
-                                    DataCell(Text(
-                                        '${model.home.b2s!.split(",")[1]}')),
-                                    DataCell(Text(
-                                        '${model.home.b2s!.split(",")[2]}')),
-                                    DataCell(Text(
-                                        '${model.home.b2s!.split(",")[3]}')),
-                                    DataCell(Text('0')),
-                                  ],
-                                ),
+                                model.home.b1s == ""
+                                    ? DataRow(
+                                        cells: <DataCell>[
+                                          DataCell(Text("    -  ")),
+                                          DataCell(Text("    -  ")),
+                                          DataCell(Text("    -  ")),
+                                          DataCell(Text("    -  ")),
+                                          DataCell(Text("    -  ")),
+                                          DataCell(Text(' 0 ')),
+                                        ],
+                                      )
+                                    : DataRow(
+                                        cells: <DataCell>[
+                                          DataCell(Text(model.home.os == "p1"
+                                              ? '${model.home.p1}*'
+                                              : '${model.home.p1}')),
+                                          DataCell(Text(
+                                              '${model.home.b1s!.split(",")[0]}')),
+                                          DataCell(Text(
+                                              '${model.home.b1s!.split(",")[1]}')),
+                                          DataCell(Text(
+                                              '${model.home.b1s!.split(",")[2]}')),
+                                          DataCell(Text(
+                                              '${model.home.b1s!.split(",")[3]}')),
+                                          DataCell(Text('0')),
+                                        ],
+                                      ),
+                                model.home.b2s == ""
+                                    ? DataRow(
+                                        cells: <DataCell>[
+                                          DataCell(Text("    -  ")),
+                                          DataCell(Text("    -  ")),
+                                          DataCell(Text("    -  ")),
+                                          DataCell(Text("    -  ")),
+                                          DataCell(Text("    -  ")),
+                                          DataCell(Text(' 0 ')),
+                                        ],
+                                      )
+                                    : DataRow(
+                                        cells: <DataCell>[
+                                          DataCell(Text(model.home.os == "p2"
+                                              ? '${model.home.p2}*'
+                                              : '${model.home.p2}')),
+                                          DataCell(Text(
+                                              '${model.home.b2s!.split(",")[0]}')),
+                                          DataCell(Text(
+                                              '${model.home.b2s!.split(",")[1]}')),
+                                          DataCell(Text(
+                                              '${model.home.b2s!.split(",")[2]}')),
+                                          DataCell(Text(
+                                              '${model.home.b2s!.split(",")[3]}')),
+                                          DataCell(Text('0')),
+                                        ],
+                                      ),
                                 // DataRow(
                                 //   cells: <DataCell>[
                                 //     DataCell(Text('Joe Root')), //Current strike batsman
@@ -739,45 +761,54 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Text('Last 24 Balls'),
-                              Expanded(
-                                child: Container(
-                                  child: ListView.builder(
-                                      controller: scrollController,
-                                      scrollDirection: Axis.horizontal,
-                                      // shrinkWrap: true,
-                                      // physics: NeverScrollableScrollPhysics(),
-                                      itemCount:
-                                          model.home.pb!.split(",").length,
-                                      itemBuilder:
-                                          (BuildContext context, int i) {
-                                        return model.home.pb!
-                                                    .split(",")
-                                                    .length ==
-                                                0
-                                            ? Container()
-                                            : CircleAvatar(
-                                                radius: 18,
-                                                backgroundColor: model.home.pb!
-                                                            .split(",")[i] ==
-                                                        "W"
-                                                    ? Colors.red[300]
-                                                    : model.home.pb!.split(
-                                                                ",")[i] ==
-                                                            '6'
-                                                        ? Colors.purple[300]
-                                                        : model.home.pb!.split(
-                                                                    ",")[i] ==
-                                                                '4'
-                                                            ? Colors.green
-                                                            : Colors.green,
-                                                child: Text(
-                                                    model.home.pb!
-                                                        .split(",")[i],
-                                                    style: subtitleTextStyle2),
-                                              );
-                                      }),
-                                ),
-                              ),
+                              // model.home.pb != ""
+                              //     ? Expanded(
+                              //         child: Container(
+                              //           child: ListView.builder(
+                              //               controller: scrollController,
+                              //               scrollDirection: Axis.horizontal,
+                              //               // shrinkWrap: true,
+                              //               // physics: NeverScrollableScrollPhysics(),
+                              //               itemCount: model.home.pb!
+                              //                   .split(",")
+                              //                   .length,
+                              //               itemBuilder:
+                              //                   (BuildContext context, int i) {
+                              //                 return model.home.pb!
+                              //                             .split(",")
+                              //                             .length ==
+                              //                         0
+                              //                     ? Container()
+                              //                     : CircleAvatar(
+                              //                         radius: 18,
+                              //                         backgroundColor: model
+                              //                                     .home.pb!
+                              //                                     .split(
+                              //                                         ",")[i] ==
+                              //                                 "W"
+                              //                             ? Colors.red[300]
+                              //                             : model.home.pb!.split(
+                              //                                         ",")[i] ==
+                              //                                     '6'
+                              //                                 ? Colors
+                              //                                     .purple[300]
+                              //                                 : model.home.pb!.split(
+                              //                                                 ",")[
+                              //                                             i] ==
+                              //                                         '4'
+                              //                                     ? Colors.green
+                              //                                     : Colors
+                              //                                         .green,
+                              //                         child: Text(
+                              //                             model.home.pb!
+                              //                                 .split(",")[i],
+                              //                             style:
+                              //                                 subtitleTextStyle2),
+                              //                       );
+                              //               }),
+                              //         ),
+                              //       )
+                              //     : Container(),
 
                               // CircleAvatar(
                               //   radius: 18,

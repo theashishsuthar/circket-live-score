@@ -95,7 +95,7 @@ class _MatchCardState extends State<MatchCard> {
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.fade,
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: MediaQuery.of(context).size.height*0.016
                             ),
                           ),
                         )
@@ -172,7 +172,7 @@ class _MatchCardState extends State<MatchCard> {
                               overflow: TextOverflow.fade,
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: MediaQuery.of(context).size.height*0.016,
                               ),
                             ),
                           )
@@ -322,9 +322,9 @@ class _MatchCardState extends State<MatchCard> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(
-                      right: MediaQuery.of(context).size.width * 0.08,
-                    ),
+                    // margin: EdgeInsets.only(
+                    //   right: MediaQuery.of(context).size.width * 0.08,
+                    // ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
