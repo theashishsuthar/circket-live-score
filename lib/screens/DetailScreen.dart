@@ -735,12 +735,14 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                     style: TextStyle(color: Colors.deepPurple),
                                   ),
                                   Container(
-                                    width: MediaQuery.of(context).size.width *0.50,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.50,
                                     child: Text(
                                       "Last wicket:-  " +
                                           model.home.lw.toString(),
                                       overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(color: Colors.deepPurple),
+                                      style:
+                                          TextStyle(color: Colors.deepPurple),
                                     ),
                                   ),
                                 ],
@@ -813,34 +815,34 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                     )
                                   : Container(),
 
-                              CircleAvatar(
-                                radius: 18,
-                                backgroundColor: Colors.red[300],
-                                child: Text('W', style: subtitleTextStyle2),
-                              ),
-                              CircleAvatar(
-                                radius: 18,
-                                backgroundColor: Colors.green,
-                                child: Text('1', style: subtitleTextStyle2),
-                              ),
-                              CircleAvatar(
-                                radius: 18,
-                                backgroundColor: Colors.green,
-                                child: Text('1', style: subtitleTextStyle2),
-                              ),
-                              CircleAvatar(
-                                radius: 18,
-                                backgroundColor: Colors.purple[300],
-                                child: Text('6', style: subtitleTextStyle2),
-                              ),
-                              CircleAvatar(
-                                radius: 18,
-                                backgroundColor: Colors.grey[600],
-                                child: Text(
-                                  '0',
-                                  style: subtitleTextStyle2,
-                                ),
-                              )
+                              // CircleAvatar(
+                              //   radius: 18,
+                              //   backgroundColor: Colors.red[300],
+                              //   child: Text('W', style: subtitleTextStyle2),
+                              // ),
+                              // CircleAvatar(
+                              //   radius: 18,
+                              //   backgroundColor: Colors.green,
+                              //   child: Text('1', style: subtitleTextStyle2),
+                              // ),
+                              // CircleAvatar(
+                              //   radius: 18,
+                              //   backgroundColor: Colors.green,
+                              //   child: Text('1', style: subtitleTextStyle2),
+                              // ),
+                              // CircleAvatar(
+                              //   radius: 18,
+                              //   backgroundColor: Colors.purple[300],
+                              //   child: Text('6', style: subtitleTextStyle2),
+                              // ),
+                              // CircleAvatar(
+                              //   radius: 18,
+                              //   backgroundColor: Colors.grey[600],
+                              //   child: Text(
+                              //     '0',
+                              //     style: subtitleTextStyle2,
+                              //   ),
+                              // )
                             ],
                           ),
                         ),
@@ -869,10 +871,24 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                   ),
                                   child: AnimatedTextKit(
                                       isRepeatingAnimation: true,
+                                      repeatForever: true,
                                       animatedTexts: [
-                                        RotateAnimatedText('England will'),
-                                        RotateAnimatedText('win by'),
-                                        RotateAnimatedText('24 runs'),
+                                        ColorizeAnimatedText(
+                                          'Your prediction will shows here.',
+                                          textStyle: TextStyle(
+                                              fontSize: 14.0,
+                                              fontWeight: FontWeight.bold),
+                                          colors: [
+                                            Colors.orange,
+                                            startingColor,
+                                            Colors.orange,
+                                            endingColor,
+                                          ],
+                                          speed: Duration(milliseconds: 300),
+                                        )
+                                        // RotateAnimatedText('England will'),
+                                        // RotateAnimatedText('win by'),
+                                        // RotateAnimatedText('24 runs'),
                                       ])),
                             ],
                           ),
@@ -976,6 +992,41 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                     ],
                   ),
                 ),
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Container(
+              color: Colors.white,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.05,
+                      top: MediaQuery.of(context).size.height * 0.08,
+                      right: MediaQuery.of(context).size.width * 0.05,
+                    ),
+                    height: MediaQuery.of(context).size.height * 0.25,
+                    width: double.infinity,
+                    child: Image.asset(
+                      'assets/Images/logo2.png',
+                      scale: 1,
+                    ),
+                  ),
+                  Container(
+                    child: Text(
+                      "Oops, information not available!",
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Colors.indigo[800],
+                        fontSize: 15,
+                        decoration: TextDecoration.none,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             );
           } else {

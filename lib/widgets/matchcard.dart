@@ -228,8 +228,9 @@ class _MatchCardState extends State<MatchCard> {
                         color: Colors.black, fontSize: 12, letterSpacing: 0.8),
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.of(context).size.width * 0.01,
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.only(
+                      left: MediaQuery.of(context).size.width * 0.043,
                     ),
                     child: Row(
                       // mainAxisAlignment: MainAxisAlignment.start,
