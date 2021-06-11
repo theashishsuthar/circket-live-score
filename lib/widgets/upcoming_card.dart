@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:cricket_live_score/screens/Homescreen.dart';
 import 'package:http/http.dart' as http;
-import 'package:cricket_live_score/Screens/HomeScreen.dart';
+// import 'package:cricket_live_score/Screens/HomeScreen.dart';
 import 'package:cricket_live_score/constraints.dart';
 import 'package:flutter/material.dart';
 
@@ -104,7 +105,7 @@ class _UpComingMatchCardState extends State<UpComingMatchCard> {
                         borderRadius: BorderRadius.circular(12)),
                     child: Container(
                       margin: EdgeInsets.all(
-                          MediaQuery.of(context).size.height * 0.02),
+                          MediaQuery.of(context).size.height * 0.015),
                       child: Column(
                         children: [
                           Text(

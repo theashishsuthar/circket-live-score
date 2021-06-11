@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
         ),
         image: Image.asset('assets/Images/logo2.png'),
         photoSize: 50.0,
-        seconds: 2,
+        seconds:3,
         navigateAfterSeconds: HomeScreen(),
         backgroundColor: Colors.white,
         useLoader: true,

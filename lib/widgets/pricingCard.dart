@@ -30,7 +30,7 @@ class PricingCard extends StatelessWidget {
         top: MediaQuery.of(context).size.height * 0.1,
         left: MediaQuery.of(context).size.height * 0.05,
         right: MediaQuery.of(context).size.height * 0.05,
-        bottom: MediaQuery.of(context).size.height * 0.12,
+        bottom: MediaQuery.of(context).size.height * 0.11,
       ),
       // width: MediaQuery.of(context).size.width * 0.15,
       decoration: BoxDecoration(
@@ -195,8 +195,9 @@ class PricingCard extends StatelessWidget {
             ),
             child: Text(
               'Note :- This subscription will be allowed on only one device.',
+              textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.red,
+                color: Colors.grey,
               ),
             ),
           ),

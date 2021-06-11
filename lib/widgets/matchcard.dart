@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'package:cricket_live_score/screens/Homescreen.dart';
 import 'package:http/http.dart' as http;
-import 'package:cricket_live_score/Screens/HomeScreen.dart';
-import 'package:cricket_live_score/screens/DetailScreen.dart';
+// import 'package:cricket_live_score/Screens/HomeScreen.dart';
+// import 'package:cricket_live_score/screens/DetailScreen.dart';
 import 'package:flutter/material.dart';
 
 import '../constraints.dart';
@@ -194,7 +195,7 @@ class _MatchCardState extends State<MatchCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.25,
+      height: MediaQuery.of(context).size.height * 0.30,
       width: double.infinity,
       margin: EdgeInsets.all(MediaQuery.of(context).size.height * 0.01),
       decoration: BoxDecoration(

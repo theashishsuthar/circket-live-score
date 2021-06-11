@@ -2,6 +2,7 @@
     package="com.example.cricket_live_score">
    <application
         android:label="Cricket live master"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

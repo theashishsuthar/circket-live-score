@@ -216,6 +216,7 @@ class _LiveScoreState extends State<LiveScore> {
         // return DataGet.fromJson(jsonDecode(response.body));
       }
     } catch (e) {
+      print(e);
       return showDialog(
           context: context,
           builder: (BuildContext context) {

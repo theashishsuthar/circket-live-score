@@ -696,9 +696,9 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                             Padding(
                               padding: EdgeInsets.only(
                                   left:
-                                      MediaQuery.of(context).size.height * 0.03,
+                                      MediaQuery.of(context).size.height * 0.02,
                                   right: MediaQuery.of(context).size.height *
-                                      0.03),
+                                      0.02),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
