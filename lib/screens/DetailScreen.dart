@@ -582,7 +582,7 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                         ),
                       ),
                       Container(
-                        height: MediaQuery.of(context).size.height * 0.23,
+                        height: MediaQuery.of(context).size.height * 0.25,
                         width: double.infinity,
                         margin: EdgeInsets.all(
                             MediaQuery.of(context).size.height * 0.01),
