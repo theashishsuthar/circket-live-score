@@ -185,6 +185,7 @@ class PricingCard extends StatelessWidget {
                 },
                 child: Text(
                   'Subscription History',
+                  textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.black),
                 )),
           ),
