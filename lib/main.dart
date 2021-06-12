@@ -15,13 +15,10 @@ void main() async {
   runApp(MyApp());
 }
 
-
-
 class MyApp extends StatelessWidget {
-  
   @override
   Widget build(BuildContext context) {
-     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     return MaterialApp(
@@ -31,23 +28,42 @@ class MyApp extends StatelessWidget {
         fontFamily: 'SourceSansPro-Regular',
         primarySwatch: Colors.blue,
       ),
-      home: SplashScreen(
-        title: Text(
-          'Crickscore',
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w700,
-            color: Colors.deepPurple,
-          ),
-        ),
-        image: Image.asset('assets/Images/logo2.png'),
-        photoSize: 50.0,
-        seconds:3,
-        navigateAfterSeconds: HomeScreen(),
-        backgroundColor: Colors.white,
-        useLoader: true,
-        loaderColor: Colors.pink[900],
-      ),
+      routes: {
+        "/": (_) => SplashScreen(
+              title: Text(
+                'Crickscore',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.deepPurple,
+                ),
+              ),
+              image: Image.asset('assets/Images/logo2.png'),
+              photoSize: 50.0,
+              seconds: 3,
+              navigateAfterSeconds: HomeScreen(),
+              backgroundColor: Colors.white,
+              useLoader: true,
+              loaderColor: Colors.pink[900],
+            ),
+      },
+      // home: SplashScreen(
+      //   title: Text(
+      //     'Crickscore',
+      //     style: TextStyle(
+      //       fontSize: 22,
+      //       fontWeight: FontWeight.w700,
+      //       color: Colors.deepPurple,
+      //     ),
+      //   ),
+      //   image: Image.asset('assets/Images/logo2.png'),
+      //   photoSize: 50.0,
+      //   seconds:3,
+      //   navigateAfterSeconds: HomeScreen(),
+      //   backgroundColor: Colors.white,
+      //   useLoader: true,
+      //   loaderColor: Colors.pink[900],
+      // ),
     );
   }
 }

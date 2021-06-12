@@ -3,15 +3,14 @@ import 'dart:convert';
 import 'dart:math';
 import 'package:cricket_live_score/screens/Homescreen.dart';
 import 'package:http/http.dart' as http;
-// import 'package:cricket_live_score/Screens/HomeScreen.dart';
-// import 'package:cricket_live_score/screens/DetailScreen.dart';
+
 import 'package:flutter/material.dart';
 
 import '../constraints.dart';
 
 class MatchCard extends StatefulWidget {
-  String? title;
-  String? uid;
+  final String? title;
+  final String? uid;
 
   MatchCard({this.title, this.uid});
 
@@ -20,19 +19,24 @@ class MatchCard extends StatefulWidget {
 }
 
 class _MatchCardState extends State<MatchCard> {
+  // ignore: close_sinks
   StreamController<DetailsModel>? streamController;
 
   @override
   void initState() {
-    streamController = StreamController();
-    Timer.periodic(Duration(microseconds: 300), (timer) {
-      fetchAlbum(widget.uid!);
-    });
+    streamController = StreamController<DetailsModel>();
+    fetchAlbum(widget.uid!);
+    timerFunction();
     super.initState();
   }
 
+  timerFunction() {
+    Timer.periodic(Duration(seconds: 5), (timer) {
+      fetchAlbum(widget.uid!);
+    });
+  }
+
   Future fetchAlbum(String uid) async {
-    // print(widget.uid);
     //http://13.235.241.13/getgames/cricket
     //http://139.59.82.99:3000/api/match/getMatchScore?eventId=30589258
     //30595134
@@ -41,13 +45,8 @@ class _MatchCardState extends State<MatchCard> {
         Uri.parse(
             'http://139.59.82.99:3000/api/match/getMatchScore?eventId=$uid'),
       );
-      // print(response.body);
-      // print(response.statusCode.toString());
 
       if (response.statusCode == 200) {
-        // print(jsonDecode(response.body));
-        // print(jsonDecode(response.body)['result']);
-
         streamController!
             .add(DetailsModel.fromJson(jsonDecode(response.body)['result']));
       } else if (response.statusCode == 202) {
@@ -67,8 +66,6 @@ class _MatchCardState extends State<MatchCard> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
-        // mainAxisAlignment: MainAxisAlignment.spaceAround,
-        // crossAxisAlignment: CrossAxisAlignment.sta,
         children: [
           isBatting
               ? Row(children: [
@@ -95,8 +92,8 @@ class _MatchCardState extends State<MatchCard> {
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.fade,
                             style: TextStyle(
-                              fontSize: MediaQuery.of(context).size.height*0.016
-                            ),
+                                fontSize:
+                                    MediaQuery.of(context).size.height * 0.016),
                           ),
                         )
                       ],
@@ -172,7 +169,8 @@ class _MatchCardState extends State<MatchCard> {
                               overflow: TextOverflow.fade,
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: MediaQuery.of(context).size.height*0.016,
+                                fontSize:
+                                    MediaQuery.of(context).size.height * 0.016,
                               ),
                             ),
                           )
@@ -217,7 +215,10 @@ class _MatchCardState extends State<MatchCard> {
                   ),
                   Text(
                     model.home.con['sr'].toString() + value,
-                    style: TextStyle(color: Colors.deepPurple),
+                    style: TextStyle(
+                      color: Colors.deepPurple,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.01,
@@ -233,42 +234,7 @@ class _MatchCardState extends State<MatchCard> {
                       left: MediaQuery.of(context).size.width * 0.043,
                     ),
                     child: Row(
-                      // mainAxisAlignment: MainAxisAlignment.start,
-                      // crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Container(
-                        //   height: MediaQuery.of(context).size.height * 0.025,
-                        //   width:MediaQuery.of(context).size.width * 0.20,
-                        //   margin: EdgeInsets.all(
-                        //     MediaQuery.of(context).size.height * 0.01
-                        //   ),
-                        //   decoration: BoxDecoration(
-                        //     color: Colors.orangeAccent,
-                        //     borderRadius: BorderRadius.circular(12)
-                        //   ),
-                        //   child: Row(
-                        //     crossAxisAlignment: CrossAxisAlignment.start,
-                        //     mainAxisAlignment: MainAxisAlignment.start,
-                        //     children: [
-                        //       Container(
-                        //         // decoration: BoxDecoration(
-                        //         //   color: Colors.red
-                        //         // ),
-                        //         color: Colors.orangeAccent,
-                        //         height: MediaQuery.of(context).size.height * 0.5,
-                        //         width: MediaQuery.of(context).size.width * 0.05,
-                        //         margin: EdgeInsets.only(
-                        //           top:  MediaQuery.of(context).size.height * 0.009,
-                        //           left:  MediaQuery.of(context).size.height * 0.006,
-                        //           bottom:  MediaQuery.of(context).size.height * 0.006
-                        //         ),
-                        //         child: SpriteDemo(),
-                        //       ),
-                        //       Text('Live',style: TextStyle(color: Colors.white),)
-                        //     ],
-                        //   ),
-                        // ),
-
                         team(
                             model.home.t1['n']!.toString(),
                             model.home.t1['f']!.toString(),
@@ -281,8 +247,6 @@ class _MatchCardState extends State<MatchCard> {
                         Column(
                           children: [
                             Container(
-                              // height: MediaQuery.of(context).size.height * 0.03,
-                              // width: MediaQuery.of(context).size.width * 0.05,
                               alignment: Alignment.center,
                               margin: EdgeInsets.symmetric(
                                   horizontal:
@@ -323,9 +287,6 @@ class _MatchCardState extends State<MatchCard> {
                     ),
                   ),
                   Container(
-                    // margin: EdgeInsets.only(
-                    //   right: MediaQuery.of(context).size.width * 0.08,
-                    // ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -351,7 +312,7 @@ class _MatchCardState extends State<MatchCard> {
                           alignment: Alignment.center,
                           color: Colors.pink,
                           child: Text(
-                           int.tryParse(model.home.rt!
+                            int.tryParse(model.home.rt!
                                         .split(',')[0]
                                         .toString()) !=
                                     null
@@ -369,10 +330,9 @@ class _MatchCardState extends State<MatchCard> {
                   Container(
                     alignment: Alignment.center,
                     margin: EdgeInsets.symmetric(
-                      horizontal:  MediaQuery.of(context).size.width * 0.08
-                    ),
+                        horizontal: MediaQuery.of(context).size.width * 0.08),
                     child: Text(
-                      model.home.con['lt'].toString() ,
+                      model.home.con['lt'].toString(),
                       style: TextStyle(
                         color: endingColor,
                         fontSize: 13,
@@ -381,6 +341,46 @@ class _MatchCardState extends State<MatchCard> {
                     ),
                   ),
                 ],
+              );
+            } else if (snapshot.hasError) {
+              return Container(
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      child: Text(
+                        widget.title!.split("/")[0],
+                        style: TextStyle(
+                          color: Colors.deepPurple,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.02,
+                    ),
+                    Container(
+                      child: Text(widget.title!.split("/")[1]),
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.02,
+                    ),
+                    Container(
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.symmetric(
+                          horizontal: MediaQuery.of(context).size.width * 0.08),
+                      child: Text(
+                        "Oops! something went wrong.",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 13,
+                          letterSpacing: 0.8,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               );
             } else {
               return Container();

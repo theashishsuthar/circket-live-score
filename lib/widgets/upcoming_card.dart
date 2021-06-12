@@ -7,9 +7,9 @@ import 'package:cricket_live_score/constraints.dart';
 import 'package:flutter/material.dart';
 
 class UpComingMatchCard extends StatefulWidget {
-  String? title;
-  String? time;
-  String? uid;
+  final String? title;
+  final String? time;
+  final String? uid;
   UpComingMatchCard({
     this.time,
     this.title,
@@ -21,18 +21,23 @@ class UpComingMatchCard extends StatefulWidget {
 }
 
 class _UpComingMatchCardState extends State<UpComingMatchCard> {
+  // ignore: close_sinks
   StreamController<DetailsModel>? streamController;
   @override
   void initState() {
     streamController = StreamController();
-    Timer.periodic(Duration(microseconds: 300), (timer) {
-      fetchAlbum(widget.uid!);
-    });
+    fetchAlbum(widget.uid!);
+    timerFunction();
     super.initState();
   }
 
+  timerFunction() {
+    Timer.periodic(Duration(seconds: 5), (timer) {
+      fetchAlbum(widget.uid!);
+    });
+  }
+
   Future fetchAlbum(String uid) async {
-    // print(widget.uid);
     //http://13.235.241.13/getgames/cricket
     //http://139.59.82.99:3000/api/match/getMatchScore?eventId=30589258
     //30595134
@@ -41,14 +46,9 @@ class _UpComingMatchCardState extends State<UpComingMatchCard> {
         Uri.parse(
             'http://139.59.82.99:3000/api/match/getMatchScore?eventId=$uid'),
       );
-      // print(response.body);
-      // print(response.statusCode.toString());
 
       if (response.statusCode == 200) {
-        // print(jsonDecode(response.body));
-        // print(jsonDecode(response.body)['result']);
-
-        streamController!
+        streamController!.sink
             .add(DetailsModel.fromJson(jsonDecode(response.body)['result']));
       } else if (response.statusCode == 202) {
         streamController!.addError(
@@ -128,19 +128,6 @@ class _UpComingMatchCardState extends State<UpComingMatchCard> {
                                           fontSize: 12, color: Colors.white),
                                     ),
                                   ),
-                                  // Container(
-                                  //   alignment: Alignment.center,
-                                  //   width: MediaQuery.of(context).size.width*0.2,
-                                  //   child: Text(
-                                  //      model.home.t1['f'].toString(),
-                                  //      overflow: TextOverflow.fade,
-                                  //      textAlign: TextAlign.center,
-                                  //     style: TextStyle(
-                                  //         color: Colors.black,
-                                  //         fontWeight: FontWeight.bold,
-                                  //         letterSpacing: 0.8),
-                                  //   ),
-                                  // )
                                 ],
                               ),
                               Column(
@@ -153,8 +140,6 @@ class _UpComingMatchCardState extends State<UpComingMatchCard> {
                                     widget.time.toString(),
                                     style: TextStyle(
                                       letterSpacing: 0.8,
-                                      // fontFamily: 'SourceSansPro-Light',
-                                      // fontWeight: FontWeight.w600
                                     ),
                                   ),
                                   SizedBox(
@@ -181,19 +166,6 @@ class _UpComingMatchCardState extends State<UpComingMatchCard> {
                                           fontSize: 12, color: Colors.white),
                                     ),
                                   ),
-                                  // Container(
-                                  //   alignment: Alignment.center,
-                                  //   width: MediaQuery.of(context).size.width*0.2,
-                                  //   child: Text(
-                                  //      model.home.t2['f'].toString(),
-                                  //      overflow: TextOverflow.fade,
-                                  //      textAlign: TextAlign.center,
-                                  //     style: TextStyle(
-                                  //         color: Colors.black,
-                                  //         fontWeight: FontWeight.bold,
-                                  //         letterSpacing: 0.8),
-                                  //   ),
-                                  // )
                                 ],
                               ),
                             ],

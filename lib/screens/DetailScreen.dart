@@ -472,8 +472,9 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceEvenly,
                                           children: [
-                                            textWidget('R.R.R', ' 8.45'),
-                                            textWidget('C.R.R', ' 0.0'),
+                                            textWidget('R.R.R', ' 5.5'),
+                                            textWidget('C.R.R',
+                                                ' ${(double.parse(model.home.i2['sc']) / double.parse(model.home.i2['ov'])).ceil().toString()}'),
                                             textWidget('Target',
                                                 ' ${model.home.i2['tr']}')
                                           ],
@@ -667,7 +668,8 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                               '${model.home.b1s!.split(",")[2]}')),
                                           DataCell(Text(
                                               '${model.home.b1s!.split(",")[3]}')),
-                                          DataCell(Text('0')),
+                                          DataCell(Text(
+                                              '${(double.parse(((int.parse(model.home.b1s!.split(",")[0]) / int.parse(model.home.b1s!.split(",")[1])) * 100).ceil().toString()).toString())}')),
                                         ],
                                       ),
                                 model.home.b2s == ""
@@ -694,7 +696,8 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                               '${model.home.b2s!.split(",")[2]}')),
                                           DataCell(Text(
                                               '${model.home.b2s!.split(",")[3]}')),
-                                          DataCell(Text('0')),
+                                          DataCell(Text(
+                                              '${(double.parse(((int.parse(model.home.b2s!.split(",")[0]) / int.parse(model.home.b2s!.split(",")[1])) * 100).ceil().toString()).toString())}')),
                                         ],
                                       ),
                                 // DataRow(

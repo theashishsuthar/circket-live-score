@@ -188,12 +188,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// import 'dart:convert';
-
-// import 'package:cricket_live_score/Screens/Detail_Screen.dart';
-// import 'package:flutter/material.dart';
-// import 'package:http/http.dart' as http;
-
 class LiveScore extends StatefulWidget {
   const LiveScore({Key? key}) : super(key: key);
 
@@ -205,7 +199,7 @@ class _LiveScoreState extends State<LiveScore> {
   Future fetchMatches() async {
     //http://13.235.241.13/getgames/cricket
     //http://139.59.82.99:3000/api/match/getMatchScore?eventId=30589258
-
+    //30594391
     try {
       final response =
           await http.get(Uri.http('13.235.241.13', '/getgames/cricket'));
@@ -214,6 +208,8 @@ class _LiveScoreState extends State<LiveScore> {
         return jsonDecode(response.body)['data'];
 
         // return DataGet.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception('failed to load the data');
       }
     } catch (e) {
       print(e);
@@ -250,7 +246,7 @@ class _LiveScoreState extends State<LiveScore> {
             if (snapshot.hasData) {
               snapshot.data!.forEach((element) {
                 DataGet d = DataGet.fromJson(element);
-                if (d.vir == "1" && d.inplay == "True") {
+                if (d.vir == "1" && d.inplay == "True" && !snapshot.hasError) {
                   _list.add(d);
                 }
               });
@@ -284,19 +280,16 @@ class _LiveScoreState extends State<LiveScore> {
                       ),
                     )
                   : ListView.builder(
-                      shrinkWrap: true,
+                      // shrinkWrap: true,
                       physics: AlwaysScrollableScrollPhysics(),
                       itemCount: _list.length,
                       itemBuilder: (BuildContext context, int index) {
                         return GestureDetector(
                           onTap: () {
+                            // print(_list[index].title);
                             Navigator.push(context, MaterialPageRoute(
                                 builder: (BuildContext context) {
-                              return
-                                  // ScoreDetailScreen(
-                                  //   uid: _list[index].uid,
-                                  // );
-                                  ScoreDetailScreen(
+                              return ScoreDetailScreen(
                                 uid: _list[index].uid,
                               );
                             }));
@@ -306,23 +299,12 @@ class _LiveScoreState extends State<LiveScore> {
                             title: _list[index].title,
                           ),
                         );
-
-                        // return     GestureDetector(
-                        //       onTap: () {},
-                        //       child: Card(
-                        //         shape: RoundedRectangleBorder(
-                        //           borderRadius: BorderRadius.circular(10),
-                        //         ),
-                        //         child: ListTile(
-                        //           title: Text(_list[index].title!.split("/")[0]),
-                        //           subtitle: Text(_list[index].title!.split("/")[1]),
-                        //         ),
-                        //       ),
-                        //     );
                       });
             } else {
               return Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                  backgroundColor: Colors.white,
+                ),
               );
             }
           }),
