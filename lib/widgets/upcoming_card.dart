@@ -44,7 +44,8 @@ class _UpComingMatchCardState extends State<UpComingMatchCard> {
     try {
       final response = await http.get(
         Uri.parse(
-            'http://139.59.82.99:3000/api/match/getMatchScore?eventId=$uid'),
+          'http://139.59.82.99:3000/api/match/getMatchScore?eventId=$uid',
+        ),
       );
 
       if (response.statusCode == 200) {
