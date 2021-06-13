@@ -24,14 +24,20 @@ class _MatchCardState extends State<MatchCard> {
 
   @override
   void initState() {
-    streamController = StreamController<DetailsModel>();
-    fetchAlbum(widget.uid!);
-    timerFunction();
+    streamController = StreamController();
+    fetchAlbum(widget.uid!).then((value) => timerFunction());
+
     super.initState();
   }
 
+  @override
+  void dispose() {
+    streamController!.close();
+    super.dispose();
+  }
+
   timerFunction() {
-    Timer.periodic(Duration(seconds: 5), (timer) {
+    Timer.periodic(Duration(seconds: 1), (timer) {
       fetchAlbum(widget.uid!);
     });
   }
@@ -185,208 +191,205 @@ class _MatchCardState extends State<MatchCard> {
   }
 
   @override
-  void dispose() {
-    streamController!.close();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.26,
-      width: double.infinity,
-      margin: EdgeInsets.all(MediaQuery.of(context).size.height * 0.01),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: StreamBuilder(
-          stream: streamController!.stream,
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData) {
-              DetailsModel model = snapshot.data;
-              String value = model.home.con['mf'].toString() == "Test"
-                  ? " (${model.home.con['mf'].toString()})"
-                  : "";
-              return Column(
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.01,
-                  ),
-                  Text(
-                    model.home.con['sr'].toString() + value,
-                    style: TextStyle(
-                      color: Colors.deepPurple,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.01,
-                  ),
-                  Text(
-                    widget.title!.split('/')[1],
-                    style: TextStyle(
-                        color: Colors.black, fontSize: 12, letterSpacing: 0.8),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.only(
-                      left: MediaQuery.of(context).size.width * 0.043,
-                    ),
-                    child: Row(
-                      children: [
-                        team(
-                            model.home.t1['n']!.toString(),
-                            model.home.t1['f']!.toString(),
-                            model.home.i1['sc'].toString() +
-                                '/' +
-                                model.home.i1['wk'].toString(),
-                            true,
-                            model.home.i1['ov'].toString() + "over",
-                            context),
-                        Column(
-                          children: [
-                            Container(
-                              alignment: Alignment.center,
-                              margin: EdgeInsets.symmetric(
-                                  horizontal:
-                                      MediaQuery.of(context).size.height *
-                                          0.015),
-                              decoration: BoxDecoration(
-                                  // color: Colors.grey,
-                                  gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: <Color>[
-                                        startingColor,
-                                        endingColor
-                                      ]),
-                                  borderRadius: BorderRadius.circular(20)),
-                              child: CircleAvatar(
-                                child: Text(
-                                  'VS',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 12),
-                                ),
-                                radius: 15,
-                                backgroundColor: Colors.transparent,
-                              ),
-                            ),
-                          ],
-                        ),
-                        team(
-                            model.home.t2['n']!.toString(),
-                            model.home.t2['f']!.toString(),
-                            model.home.i2['sc'].toString() +
-                                '/' +
-                                model.home.i2['wk'].toString(),
-                            false,
-                            model.home.i2['ov'].toString() + ' ' + "over",
-                            context),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.03,
-                          width: MediaQuery.of(context).size.width * 0.10,
-                          margin: EdgeInsets.all(2),
-                          alignment: Alignment.center,
-                          color: Colors.pink,
-                          child: Text(
-                            double.tryParse(model.home.rt!
-                                        .split(',')[0]
-                                        .toString()) !=
-                                    null
-                                ? model.home.rt!.split(',')[0]
-                                : model.home.rt!.split(',')[1],
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.03,
-                          width: MediaQuery.of(context).size.width * 0.10,
-                          alignment: Alignment.center,
-                          color: Colors.pink,
-                          child: Text(
-                            int.tryParse(model.home.rt!
-                                        .split(',')[0]
-                                        .toString()) !=
-                                    null
-                                ? model.home.rt!.split(',')[1]
-                                : model.home.rt!.split(',')[2],
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.01,
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.symmetric(
-                        horizontal: MediaQuery.of(context).size.width * 0.08),
-                    child: Text(
-                      model.home.con['lt'].toString(),
-                      style: TextStyle(
-                        color: endingColor,
-                        fontSize: 13,
-                        letterSpacing: 0.8,
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            } else if (snapshot.hasError) {
-              return Container(
-                alignment: Alignment.center,
+    return StreamBuilder(
+        stream: streamController!.stream,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            DetailsModel model = snapshot.data;
+            String value = model.home.con['mf'].toString() == "Test"
+                ? " (${model.home.con['mf'].toString()})"
+                : "";
+            return Container(
+                height: MediaQuery.of(context).size.height * 0.26,
+                width: double.infinity,
+                margin:
+                    EdgeInsets.all(MediaQuery.of(context).size.height * 0.01),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      child: Text(
-                        widget.title!.split("/")[0],
-                        style: TextStyle(
-                          color: Colors.deepPurple,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.01,
+                    ),
+                    Text(
+                      model.home.con['sr'].toString() + value,
+                      style: TextStyle(
+                        color: Colors.deepPurple,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.02,
+                      height: MediaQuery.of(context).size.height * 0.01,
+                    ),
+                    Text(
+                      widget.title!.split('/')[1],
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 12,
+                          letterSpacing: 0.8),
                     ),
                     Container(
-                      child: Text(widget.title!.split("/")[1]),
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.only(
+                        left: MediaQuery.of(context).size.width * 0.043,
+                      ),
+                      child: Row(
+                        children: [
+                          team(
+                              model.home.t1['n']!.toString(),
+                              model.home.t1['f']!.toString(),
+                              model.home.i1['sc'].toString() +
+                                  '/' +
+                                  model.home.i1['wk'].toString(),
+                              true,
+                              model.home.i1['ov'].toString() + "over",
+                              context),
+                          Column(
+                            children: [
+                              Container(
+                                alignment: Alignment.center,
+                                margin: EdgeInsets.symmetric(
+                                    horizontal:
+                                        MediaQuery.of(context).size.height *
+                                            0.015),
+                                decoration: BoxDecoration(
+                                    // color: Colors.grey,
+                                    gradient: LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: <Color>[
+                                          startingColor,
+                                          endingColor
+                                        ]),
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: CircleAvatar(
+                                  child: Text(
+                                    'VS',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 12),
+                                  ),
+                                  radius: 15,
+                                  backgroundColor: Colors.transparent,
+                                ),
+                              ),
+                            ],
+                          ),
+                          team(
+                              model.home.t2['n']!.toString(),
+                              model.home.t2['f']!.toString(),
+                              model.home.i2['sc'].toString() +
+                                  '/' +
+                                  model.home.i2['wk'].toString(),
+                              false,
+                              model.home.i2['ov'].toString() + ' ' + "over",
+                              context),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.03,
+                            width: MediaQuery.of(context).size.width * 0.10,
+                            margin: EdgeInsets.all(2),
+                            alignment: Alignment.center,
+                            color: Colors.pink,
+                            child: Text(
+                              double.tryParse(model.home.rt!
+                                          .split(',')[0]
+                                          .toString()) !=
+                                      null
+                                  ? model.home.rt!.split(',')[0]
+                                  : model.home.rt!.split(',')[1],
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.03,
+                            width: MediaQuery.of(context).size.width * 0.10,
+                            alignment: Alignment.center,
+                            color: Colors.pink,
+                            child: Text(
+                              int.tryParse(model.home.rt!
+                                          .split(',')[0]
+                                          .toString()) !=
+                                      null
+                                  ? model.home.rt!.split(',')[1]
+                                  : model.home.rt!.split(',')[2],
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.02,
+                      height: MediaQuery.of(context).size.height * 0.01,
                     ),
                     Container(
                       alignment: Alignment.center,
                       margin: EdgeInsets.symmetric(
                           horizontal: MediaQuery.of(context).size.width * 0.08),
                       child: Text(
-                        "Oops! something went wrong.",
+                        model.home.con['lt'].toString(),
                         style: TextStyle(
-                          color: Colors.black,
+                          color: endingColor,
                           fontSize: 13,
                           letterSpacing: 0.8,
                         ),
                       ),
                     ),
                   ],
-                ),
-              );
-            } else {
-              return Container();
-            }
-          }),
-    );
+                ));
+          } else if (snapshot.hasError) {
+            return Container();
+            // return Container(
+            //   alignment: Alignment.center,
+            //   child: Column(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: [
+            //       Container(
+            //         child: Text(
+            //           widget.title!.split("/")[0],
+            //           style: TextStyle(
+            //             color: Colors.deepPurple,
+            //             fontWeight: FontWeight.bold,
+            //           ),
+            //         ),
+            //       ),
+            //       SizedBox(
+            //         height: MediaQuery.of(context).size.height * 0.02,
+            //       ),
+            //       Container(
+            //         child: Text(widget.title!.split("/")[1]),
+            //       ),
+            //       SizedBox(
+            //         height: MediaQuery.of(context).size.height * 0.02,
+            //       ),
+            //       Container(
+            //         alignment: Alignment.center,
+            //         margin: EdgeInsets.symmetric(
+            //             horizontal: MediaQuery.of(context).size.width * 0.08),
+            //         child: Text(
+            //           "Oops! something went wrong.",
+            //           style: TextStyle(
+            //             color: Colors.black,
+            //             fontSize: 13,
+            //             letterSpacing: 0.8,
+            //           ),
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // );
+          } else {
+            return Container();
+          }
+        });
   }
 }
 

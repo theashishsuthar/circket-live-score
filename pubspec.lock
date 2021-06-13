@@ -106,6 +106,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0"
+  eventify:
+    dependency: transitive
+    description:
+      name: eventify
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   fake_async:
     dependency: transitive
     description:
@@ -184,6 +191,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  google_mobile_ads:
+    dependency: "direct main"
+    description:
+      name: google_mobile_ads
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.13.0"
   google_sign_in:
     dependency: "direct main"
     description:
@@ -275,6 +289,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
+  razorpay_flutter:
+    dependency: "direct main"
+    description:
+      name: razorpay_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.6"
   sky_engine:
     dependency: transitive
     description: flutter

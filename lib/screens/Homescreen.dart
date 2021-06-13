@@ -5,12 +5,13 @@ import 'package:cricket_live_score/constraints.dart';
 import 'package:cricket_live_score/screens/DetailScreen.dart';
 import 'package:cricket_live_score/screens/subscription.dart';
 import 'package:cricket_live_score/widgets/matchcard.dart';
+import 'package:flutter/services.dart';
+
 import 'package:http/http.dart' as http;
-import 'package:cricket_live_score/widgets/pricingCard.dart';
+
 import 'package:cricket_live_score/widgets/upcoming_card.dart';
 import 'package:flutter/material.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter_stack_card/flutter_stack_card.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -22,166 +23,128 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          centerTitle: true,
-          title: Text(
-            'Crickscore',
-            style: appBarTitleTextStyle,
+      child: WillPopScope(
+        onWillPop: () async {
+          return await showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text(
+                    'Are you sure?',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.deepPurple,
+                    ),
+                  ),
+                  content: const Text('Do you want to exit from app?'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: Text(
+                        'No',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.deepPurple,
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        SystemNavigator.pop();
+                      },
+                      child: const Text(
+                        'Yes',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.redAccent,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              });
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+            centerTitle: true,
+            title: Text(
+              'Crickscore',
+              style: appBarTitleTextStyle,
+            ),
+            flexibleSpace: Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: <Color>[startingColor, endingColor]))),
+            bottom: TabBar(
+              isScrollable: true,
+              indicatorColor: Colors.white,
+              tabs: [
+                Tab(
+                  child: Row(
+                    children: [
+                      Icon(Icons.sports_cricket),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.015,
+                      ),
+                      Text(
+                        'Live',
+                        style: tabBarTitleTextStyle,
+                      ),
+                    ],
+                  ),
+                ),
+                Tab(
+                  child: Row(
+                    children: [
+                      Icon(EvaIcons.clockOutline),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.015,
+                      ),
+                      Text(
+                        'Upcoming',
+                        style: tabBarTitleTextStyle,
+                      ),
+                    ],
+                  ),
+                ),
+                Tab(
+                  child: Row(
+                    children: [
+                      Icon(Icons.wallet_membership),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.015,
+                      ),
+                      Text(
+                        'Subscription',
+                        style: tabBarTitleTextStyle,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-          flexibleSpace: Container(
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: <Color>[startingColor, endingColor]))),
-          bottom: TabBar(
-            isScrollable: true,
-            indicatorColor: Colors.white,
-            tabs: [
-              Tab(
-                child: Row(
-                  children: [
-                    Icon(Icons.sports_cricket),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.015,
-                    ),
-                    Text(
-                      'Live',
-                      style: tabBarTitleTextStyle,
-                    ),
-                  ],
-                ),
+          body: TabBarView(
+            children: [
+              LiveScore(),
+              Container(
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: <Color>[startingColor, endingColor])),
+                child: UpcomingMatches(),
               ),
-              Tab(
-                child: Row(
-                  children: [
-                    Icon(EvaIcons.clockOutline),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.015,
-                    ),
-                    Text(
-                      'Upcoming',
-                      style: tabBarTitleTextStyle,
-                    ),
-                  ],
-                ),
-              ),
-              Tab(
-                child: Row(
-                  children: [
-                    Icon(Icons.wallet_membership),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.015,
-                    ),
-                    Text(
-                      'Subscription',
-                      style: tabBarTitleTextStyle,
-                    ),
-                  ],
-                ),
-              ),
+              Subscription()
             ],
           ),
-        ),
-        body: TabBarView(
-          children: [
-            //       Container(
-
-            //         margin: EdgeInsets.all(
-            //           MediaQuery.of(context).size.height * 0.03
-            //         ),
-            //         child: StackCard.builder(
-
-            // stackOffset:Offset(40, 25),
-            // stackType:  StackType.middle,
-            //   displayIndicator: true,
-            //   displayIndicatorBuilder:
-            //         IdicatorBuilder(displayIndicatorActiveColor: Colors.blue),
-            //   itemCount: 5,
-            //   dimension:StackDimension(
-            //     height: MediaQuery.of(context).size.height * 0.80,
-            //     width: double.infinity
-            //   ),
-            //   onSwap: (index) {
-            //     print("Page change to $index");
-            //   },
-            //   itemBuilder: (context, index) {
-            //     // Movie movie = _movieData[index];
-            //     return MatchCard();
-            //   }),
-            //       ),
-            LiveScore(),
-
-            // Container(
-            //   decoration: BoxDecoration(
-            //       gradient: LinearGradient(
-            //           begin: Alignment.topLeft,
-            //           end: Alignment.bottomRight,
-            //           colors: <Color>[startingColor, endingColor])),
-            //   child: SingleChildScrollView(
-            //     child: Column(
-            //       children: [
-            //         InkWell(
-            //           onTap: () {
-            //             Navigator.of(context).push(
-            //                 MaterialPageRoute(builder: (BuildContext conext) {
-            //               return DetailScreen();
-            //             }));
-            //           },
-            //           child: MatchCard(),
-            //         ),
-            //         MatchCard(),
-            //         MatchCard(),
-            //         MatchCard(),
-            //       ],
-            //     ),
-            //   ),
-            // ),
-
-            Container(
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: <Color>[startingColor, endingColor])),
-              child: UpcomingMatches(),
-              // SingleChildScrollView(
-              //   child: Column(
-              //     children: [
-              //       // UpComingMatchCard(),
-              //       // UpComingMatchCard(),
-              //       // UpComingMatchCard(),
-              //       // UpComingMatchCard(),
-              //       // UpComingMatchCard()
-              //     ],
-              //   ),
-              // ),
-            ),
-
-            Subscription()
-            //   child: Column(
-            //     children: [
-            //       Card(
-            //         shape: RoundedRectangleBorder(
-            //           borderRadius: BorderRadius.circular(5.0),
-            //         ),
-            //         margin: EdgeInsets.all(
-            //             MediaQuery.of(context).size.height * 0.01),
-            //         child: ListTile(
-            //           leading: Icon(Icons.shopping_bag),
-            //           title: Text('Your Subscription'),
-            //           trailing: Icon(
-            //             EvaIcons.arrowIosForward,
-            //             color: Colors.black,
-            //           ),
-            //         ),
-            //       )
-            //     ],
-            //   ),
-            // )
-          ],
         ),
       ),
     );
@@ -246,7 +209,7 @@ class _LiveScoreState extends State<LiveScore> {
             if (snapshot.hasData) {
               snapshot.data!.forEach((element) {
                 DataGet d = DataGet.fromJson(element);
-                if (d.vir == "1" && d.inplay == "True" && !snapshot.hasError) {
+                if (d.vir == "1" && d.inplay == "True") {
                   _list.add(d);
                 }
               });

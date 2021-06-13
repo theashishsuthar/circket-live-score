@@ -1,16 +1,151 @@
 import 'package:cricket_live_score/screens/subscriptionHistory.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 
-class PricingCard extends StatelessWidget {
-  // const PricingCard({ Key key }) : super(key: key);
-
-  String? imagePath;
-  String? duration;
-  String? price;
-  bool? isMonthly;
+class PricingCard extends StatefulWidget {
+  final String? imagePath;
+  final String? duration;
+  final String? price;
+  final bool? isMonthly;
 
   PricingCard({this.imagePath, this.duration, this.price, this.isMonthly});
+
+  @override
+  _PricingCardState createState() => _PricingCardState();
+}
+
+class _PricingCardState extends State<PricingCard> {
+  static const platform = const MethodChannel("razorpay_flutter");
+
+  late Razorpay _razorpay;
+  @override
+  void initState() {
+    super.initState();
+    _razorpay = Razorpay();
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _razorpay.clear();
+  }
+
+  void openCheckout() async {
+    var options = {
+      'key': 'rzp_test_XF0TQwHrsnczbj',
+      'amount': num.parse("100.00"),
+      'name': 'Subscription',
+      'description': 'Subscription',
+      // 'prefill': {'contact': '8888888888', 'email': 'test@razorpay.com'},
+      'external': {
+        'wallets': ['paytm']
+      }
+    };
+
+    try {
+      _razorpay.open(options);
+    } catch (e) {
+      return showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                'Oops! something went wrong!',
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    'Okay',
+                  ),
+                )
+              ],
+            );
+          });
+    }
+  }
+
+  _handlePaymentSuccess(PaymentSuccessResponse response) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              'Payment was successful!',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Okay',
+                ),
+              )
+            ],
+          );
+        });
+    // Fluttertoast.showToast(
+    //     msg: "SUCCESS: " + response.paymentId!, toastLength: Toast.LENGTH_SHORT);
+  }
+
+  _handlePaymentError(PaymentFailureResponse response) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              'Payment was failed!',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Okay',
+                ),
+              )
+            ],
+          );
+        });
+    // print('failure ---- ${response.code.toString()}----${response.message}');
+    // Fluttertoast.showToast(
+    //     msg: "ERROR: " + response.code.toString() + " - " + response.message!,
+    //     toastLength: Toast.LENGTH_SHORT);
+  }
+
+  _handleExternalWallet(ExternalWalletResponse response) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              'Payment through wallet!',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  'Okay',
+                ),
+              )
+            ],
+          );
+        });
+    // print("wallet: ---- ${response.walletName}");
+    // Fluttertoast.showToast(
+    //     msg: "EXTERNAL_WALLET: " + response.walletName!, toastLength: Toast.LENGTH_SHORT);
+  }
 
   Widget listOfFeature(String title) {
     return ListTile(
@@ -25,19 +160,17 @@ class PricingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // height: MediaQuery.of(context).size.height ,
       margin: EdgeInsets.only(
         top: MediaQuery.of(context).size.height * 0.1,
         left: MediaQuery.of(context).size.height * 0.05,
         right: MediaQuery.of(context).size.height * 0.05,
         bottom: MediaQuery.of(context).size.height * 0.11,
       ),
-      // width: MediaQuery.of(context).size.width * 0.15,
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(12)),
       child: Column(
         children: [
-          isMonthly!
+          widget.isMonthly!
               ? Container(
                   alignment: Alignment.center,
                   margin: EdgeInsets.only(
@@ -60,9 +193,6 @@ class PricingCard extends StatelessWidget {
               : SizedBox(
                   height: MediaQuery.of(context).size.height * 0.05,
                 ),
-
-          // Image.asset('assets/Images/1.png'),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,16 +208,15 @@ class PricingCard extends StatelessWidget {
                     image: DecorationImage(
                         fit: BoxFit.fill,
                         image: AssetImage(
-                          imagePath!,
+                          widget.imagePath!,
                         ))),
               ),
-              // Size
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    duration!,
+                    widget.duration!,
                     style:
                         TextStyle(fontWeight: FontWeight.normal, fontSize: 18),
                   ),
@@ -98,7 +227,6 @@ class PricingCard extends StatelessWidget {
                           offset: const Offset(-2, -2),
                           child: Text(
                             '₹',
-                            //superscript is usually smaller in size
                             textScaleFactor: 1.0,
                             style: TextStyle(
                                 color: Colors.grey,
@@ -108,7 +236,7 @@ class PricingCard extends StatelessWidget {
                         ),
                       ),
                       TextSpan(
-                          text: price,
+                          text: widget.price,
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 25,
@@ -146,19 +274,17 @@ class PricingCard extends StatelessWidget {
               ],
             ),
           ),
-
           Container(
             width: MediaQuery.of(context).size.width * 0.40,
             child: ElevatedButton(
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.white),
-                    // textStyle: MaterialStateProperty.all(TextStyle(fontSize: 15,color: Colors.black)),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5.0),
                           side: BorderSide(color: Colors.blue)),
                     )),
-                onPressed: () {},
+                onPressed: openCheckout,
                 child: Text(
                   'Let\'s Get Started',
                   style: TextStyle(color: Colors.black),
@@ -169,7 +295,6 @@ class PricingCard extends StatelessWidget {
             child: ElevatedButton(
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.white),
-                    // textStyle: MaterialStateProperty.all(TextStyle(fontSize: 15,color: Colors.black)),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(5.0),
@@ -202,10 +327,6 @@ class PricingCard extends StatelessWidget {
               ),
             ),
           ),
-
-          // Text('This subscription will be \n valid for current device',textAlign: TextAlign.center,style: TextStyle(
-          //   fontSize: 12
-          // ),)
         ],
       ),
     );

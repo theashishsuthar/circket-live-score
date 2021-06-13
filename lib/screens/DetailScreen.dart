@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cricket_live_score/advertisement/ad_helper.dart';
 import 'package:cricket_live_score/constraints.dart';
 import 'package:cricket_live_score/screens/Homescreen.dart';
 import 'package:cricket_live_score/widgets/matchcard.dart';
 import 'package:cricket_live_score/widgets/upcoming_card.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart' as http;
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter_stack_card/flutter_stack_card.dart';
@@ -21,21 +23,54 @@ class ScoreDetailScreen extends StatefulWidget {
 
 class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
   // ignore: close_sinks
-  StreamController<DetailsModel>? streamController;
+  StreamController<DetailsModel>? detailstreamController;
   ScrollController? scrollController;
+
+  late BannerAd _bannerAd;
+
+  bool _isBannerAdReady = false;
+
   @override
   void initState() {
+    _loadInterstitialAd();
+    _bannerAd = BannerAd(
+      adUnitId: AdHelper.bannerAdUnitId!,
+      request: AdRequest(),
+      size: AdSize.banner,
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          setState(() {
+            _isBannerAdReady = true;
+          });
+        },
+        onAdFailedToLoad: (ad, err) {
+          print('Failed to load a banner ad: ${err.message}');
+          _isBannerAdReady = false;
+          ad.dispose();
+        },
+      ),
+    );
+
+    _bannerAd.load();
     scrollController = ScrollController();
 
-    streamController = StreamController();
-    Timer.periodic(Duration(microseconds: 300), (timer) {
-      fetchAlbum(widget.uid!);
+    detailstreamController = StreamController();
+    Future.delayed(Duration(seconds: 1), () {
+      fetchAlbum(widget.uid!).then((value) => timerfunction());
     });
+
     super.initState();
   }
 
+  timerfunction() {
+    Timer.periodic(Duration(milliseconds: 300), (timer) {
+      fetchAlbum(widget.uid!);
+    });
+  }
+
   void dispose() {
-    streamController!.close();
+    detailstreamController!.close();
+
     scrollController!.dispose();
     super.dispose();
   }
@@ -57,10 +92,10 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
         // print(jsonDecode(response.body));
         // print(jsonDecode(response.body)['result']);
 
-        streamController!
+        detailstreamController!
             .add(DetailsModel.fromJson(jsonDecode(response.body)['result']));
       } else if (response.statusCode == 202) {
-        streamController!.addError(
+        detailstreamController!.addError(
           new Exception("Failed to load the data"),
         );
       } else {
@@ -78,7 +113,12 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
       margin: EdgeInsets.all(2),
       decoration: BoxDecoration(
           color: Colors.red[300], borderRadius: BorderRadius.circular(8)),
-      child: Center(child: Text(data, style: TextStyle(color: Colors.white))),
+      child: Center(
+        child: Text(
+          data,
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
     );
   }
 
@@ -176,10 +216,37 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
+  InterstitialAd? _interstitialAd;
+
+  bool _isInterstitialAdReady = false;
+
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: AdHelper.interstitialAdUnitId!,
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          this._interstitialAd = ad;
+
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (ad) {
+              Navigator.pop(context);
+            },
+          );
+
+          _isInterstitialAdReady = true;
+        },
+        onAdFailedToLoad: (err) {
+          print('Failed to load an interstitial ad: ${err.message}');
+          _isInterstitialAdReady = false;
+        },
+      ),
+    );
+  }
+
+  Widget detailsScreen() {
     return StreamBuilder(
-        stream: streamController!.stream,
+        stream: detailstreamController!.stream,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
@@ -194,6 +261,17 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
             return Scaffold(
               appBar: AppBar(
                 elevation: 0,
+                leading: IconButton(
+                  onPressed: () {
+                    if (_isInterstitialAdReady) {
+                      
+                      _interstitialAd?.show();
+                    } else {
+                      Navigator.pop(context);
+                    }
+                  },
+                  icon: Icon(Icons.arrow_back),
+                ),
                 centerTitle: true,
                 title: Text(
                   model.home.t1['n'] + ' vs ' + model.home.t2['n'],
@@ -211,27 +289,6 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                     ),
                   ),
                 ),
-                // bottom: TabBar(
-                //   isScrollable: true,
-                //   indicatorColor: Colors.white,
-                //   tabs: [
-                //     Tab(
-                //       child: Row(
-                //         children: [
-                //           Icon(Icons.sports_cricket),
-                //           SizedBox(
-                //             width: MediaQuery.of(context).size.width * 0.015,
-                //           ),
-                //           Text(
-                //             'Live',
-                //             style: tabBarTitleTextStyle,
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-
-                //   ],
-                // ),
               ),
               body: Container(
                 height: MediaQuery.of(context).size.height,
@@ -241,6 +298,8 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                         end: Alignment.bottomRight,
                         colors: <Color>[startingColor, endingColor])),
                 child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  physics: AlwaysScrollableScrollPhysics(),
                   child: Column(
                     children: [
                       Container(
@@ -599,7 +658,9 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                 DataColumn(
                                   label: Text(
                                     'Batsman',
-                                    style: TextStyle(color: Colors.deepPurple),
+                                    style: TextStyle(
+                                        color: Colors.deepPurple,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 DataColumn(
@@ -657,9 +718,14 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                       )
                                     : DataRow(
                                         cells: <DataCell>[
-                                          DataCell(Text(model.home.os == "p1"
-                                              ? '${model.home.p1}*'
-                                              : '${model.home.p1}')),
+                                          DataCell(Text(
+                                            model.home.os == "p1"
+                                                ? '${model.home.p1}*'
+                                                : '${model.home.p1}',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          )),
                                           DataCell(Text(
                                               '${model.home.b1s!.split(",")[0]}')),
                                           DataCell(Text(
@@ -685,9 +751,14 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                       )
                                     : DataRow(
                                         cells: <DataCell>[
-                                          DataCell(Text(model.home.os == "p2"
-                                              ? '${model.home.p2}*'
-                                              : '${model.home.p2}')),
+                                          DataCell(Text(
+                                            model.home.os == "p2"
+                                                ? '${model.home.p2}*'
+                                                : '${model.home.p2}',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          )),
                                           DataCell(Text(
                                               '${model.home.b2s!.split(",")[0]}')),
                                           DataCell(Text(
@@ -755,6 +826,7 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                         ),
                       ),
                       Container(
+                        alignment: Alignment.center,
                         height: MediaQuery.of(context).size.height * 0.05,
                         width: double.infinity,
                         margin: EdgeInsets.all(
@@ -766,9 +838,15 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                           padding: EdgeInsets.all(
                               MediaQuery.of(context).size.height * 0.01),
                           child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text('Last 24 Balls'),
+                              Text(
+                                'Last 24 Balls',
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.01,
+                              ),
                               model.home.pb != ""
                                   ? Expanded(
                                       child: Container(
@@ -900,8 +978,16 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                       model.home.md == ""
                           ? Container()
                           : Container(
-                              height: MediaQuery.of(context).size.height * 0.33,
+                              alignment: Alignment.topCenter,
+                              height: MediaQuery.of(context).size.height * 0.23,
+
                               width: double.infinity,
+                              padding: EdgeInsets.symmetric(
+                                horizontal:
+                                    MediaQuery.of(context).size.width * 0.03,
+                                vertical:
+                                    MediaQuery.of(context).size.height * 0.02,
+                              ),
                               margin: EdgeInsets.all(
                                   MediaQuery.of(context).size.height * 0.01),
                               decoration: BoxDecoration(
@@ -909,7 +995,10 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                   borderRadius: BorderRadius.circular(12)),
                               child: model.home.md == ""
                                   ? Text("")
-                                  : Text("${model.home.md}"),
+                                  : Text(
+                                      "${(model.home.md)}",
+                                      textAlign: TextAlign.start,
+                                    ),
                               //  Column(
                               //   crossAxisAlignment: CrossAxisAlignment.start,
                               //   children: [
@@ -1034,12 +1123,41 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
             );
           } else {
             return Container(
-              color: Colors.white,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: <Color>[
+                    startingColor,
+                    endingColor,
+                  ],
+                ),
+              ),
               child: Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
               ),
             );
           }
         });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        detailsScreen(),
+        if (_isBannerAdReady)
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              width: _bannerAd.size.width.toDouble(),
+              height: _bannerAd.size.height.toDouble(),
+              child: AdWidget(ad: _bannerAd),
+            ),
+          ),
+      ],
+    );
   }
 }
