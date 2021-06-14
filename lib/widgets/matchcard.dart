@@ -346,46 +346,85 @@ class _MatchCardState extends State<MatchCard> {
                   ],
                 ));
           } else if (snapshot.hasError) {
-            return Container();
-            // return Container(
-            //   alignment: Alignment.center,
-            //   child: Column(
-            //     mainAxisAlignment: MainAxisAlignment.center,
-            //     children: [
-            //       Container(
-            //         child: Text(
-            //           widget.title!.split("/")[0],
-            //           style: TextStyle(
-            //             color: Colors.deepPurple,
-            //             fontWeight: FontWeight.bold,
-            //           ),
-            //         ),
-            //       ),
-            //       SizedBox(
-            //         height: MediaQuery.of(context).size.height * 0.02,
-            //       ),
-            //       Container(
-            //         child: Text(widget.title!.split("/")[1]),
-            //       ),
-            //       SizedBox(
-            //         height: MediaQuery.of(context).size.height * 0.02,
-            //       ),
-            //       Container(
-            //         alignment: Alignment.center,
-            //         margin: EdgeInsets.symmetric(
-            //             horizontal: MediaQuery.of(context).size.width * 0.08),
-            //         child: Text(
-            //           "Oops! something went wrong.",
-            //           style: TextStyle(
-            //             color: Colors.black,
-            //             fontSize: 13,
-            //             letterSpacing: 0.8,
-            //           ),
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // );
+            // return Container();
+            return Container(
+              height: MediaQuery.of(context).size.height * 0.15,
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width * 0.1,
+              ),
+              margin: EdgeInsets.all(MediaQuery.of(context).size.height * 0.01),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CircleAvatar(
+                    radius: 15,
+                    backgroundColor: Colors.black,
+                    child: Text(
+                      widget.title!
+                          .split("/")[0]
+                          .split("v")[0]
+                          .trim()
+                          .substring(0, 1),
+                      style: TextStyle(fontSize: 12, color: Colors.white),
+                    ),
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        child: Text(
+                          widget.title!.split("/")[0],
+                          style: TextStyle(
+                            color: Colors.deepPurple,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.02,
+                      ),
+                      Container(
+                        child: Text(widget.title!.split("/")[1]),
+                      ),
+                      // SizedBox(
+                      //   height: MediaQuery.of(context).size.height * 0.02,
+                      // ),
+                      // Container(
+                      //   alignment: Alignment.center,
+                      //   margin: EdgeInsets.symmetric(
+                      //       horizontal: MediaQuery.of(context).size.width * 0.08),
+                      //   child: Text(
+                      //     "Oops! something went wrong.",
+                      //     style: TextStyle(
+                      //       color: Colors.black,
+                      //       fontSize: 13,
+                      //       letterSpacing: 0.8,
+                      //     ),
+                      //   ),
+                      // ),
+                    ],
+                  ),
+                  CircleAvatar(
+                    radius: 15,
+                    backgroundColor: Colors.black,
+                    child: Text(
+                      widget.title!
+                          .split("/")[0]
+                          .split("v")[1]
+                          .trim()
+                          .substring(0, 1),
+                      style: TextStyle(fontSize: 12, color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            );
           } else {
             return Container();
           }

@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cricket_live_score/screens/subscriptionHistory.dart';
+import 'package:device_info/device_info.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -72,31 +74,68 @@ class _PricingCardState extends State<PricingCard> {
     }
   }
 
-  _handlePaymentSuccess(PaymentSuccessResponse response) {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(
-              'Payment was successful!',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  'Okay',
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    // print(response.orderId);
+    // print(response.paymentId);
+    // print(response.signature);
+    //pay_HMq1GE0a9PtN2B
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    await FirebaseFirestore.instance
+        .collection("PaymentHistory")
+        .doc(androidInfo.androidId)
+        .collection("historyList")
+        .add({
+          "payment": "Success",
+          "paymentId": response.paymentId,
+          "time": Timestamp.now(),
+        })
+        .then((value) async => await FirebaseFirestore.instance
+                .collection("Users")
+                .doc(androidInfo.androidId)
+                .update({
+              "premium": true,
+              "premiumStart": Timestamp.now(),
+              'PremiumEnd': Timestamp.fromDate(DateTime(
+                  DateTime.parse(Timestamp.now().toDate().toString()).year,
+                  DateTime.parse(Timestamp.now().toDate().toString()).month + 1,
+                  DateTime.parse(Timestamp.now().toDate().toString()).day)),
+            }))
+        .then((value) => showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(
+                  'Payment was successful!',
                 ),
-              )
-            ],
-          );
-        });
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Okay',
+                    ),
+                  )
+                ],
+              );
+            }));
+
     // Fluttertoast.showToast(
     //     msg: "SUCCESS: " + response.paymentId!, toastLength: Toast.LENGTH_SHORT);
   }
 
-  _handlePaymentError(PaymentFailureResponse response) {
+  _handlePaymentError(PaymentFailureResponse response) async {
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    await FirebaseFirestore.instance
+        .collection("PaymentHistory")
+        .doc(androidInfo.androidId)
+        .collection("historyList")
+        .add({
+      "payment": "Failed",
+      "paymentId": "xxxxx",
+      "time": Timestamp.now(),
+    });
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -155,6 +194,40 @@ class _PricingCardState extends State<PricingCard> {
         child: Text(title, style: TextStyle(fontSize: 14, color: Colors.black)),
       ),
     );
+  }
+
+  Future payment() async {
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection("Users")
+        .doc(androidInfo.androidId)
+        .get();
+    if (doc['premium'] == false) {
+      openCheckout();
+    } else {
+      return showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(
+                'You had already subscription.',
+                style: TextStyle(
+                  fontSize: 15.0,
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    'Okay',
+                  ),
+                )
+              ],
+            );
+          });
+    }
   }
 
   @override
@@ -284,7 +357,7 @@ class _PricingCardState extends State<PricingCard> {
                           borderRadius: BorderRadius.circular(5.0),
                           side: BorderSide(color: Colors.blue)),
                     )),
-                onPressed: openCheckout,
+                onPressed: payment,
                 child: Text(
                   'Let\'s Get Started',
                   style: TextStyle(color: Colors.black),

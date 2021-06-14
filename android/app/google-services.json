@@ -1,41 +1,33 @@
 {
   "project_info": {
-    "project_number": "896619599899",
-    "project_id": "cricket-live-score-e1c81",
-    "storage_bucket": "cricket-live-score-e1c81.appspot.com"
+    "project_number": "962263162566",
+    "project_id": "cricket-line-master",
+    "storage_bucket": "cricket-line-master.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:896619599899:android:b4f097c1aaea09bb0540be",
+        "mobilesdk_app_id": "1:962263162566:android:99a6da81dada66a8ed41c7",
         "android_client_info": {
           "package_name": "com.example.cricket_live_score"
         }
       },
       "oauth_client": [
         {
-          "client_id": "896619599899-513jkm7rmkcujiclekjjknh7r6juf57k.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.cricket_live_score",
-            "certificate_hash": "9c6ca37c800e5588fb73fb2183476ace735c8db1"
-          }
-        },
-        {
-          "client_id": "896619599899-hd3b6ln5fi5e0jfcsvde3qv60fsr80bh.apps.googleusercontent.com",
+          "client_id": "962263162566-aoa5vlbuffo6pj1eka70opr2663sk1lh.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBvYJJp-GV0rzkXAlllqo94veHIjEStSU4"
+          "current_key": "AIzaSyCldUZg14iqAQwDA2FQObxZ0nHlVNx_zhM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "896619599899-hd3b6ln5fi5e0jfcsvde3qv60fsr80bh.apps.googleusercontent.com",
+              "client_id": "962263162566-aoa5vlbuffo6pj1eka70opr2663sk1lh.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -1,13 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cricket_live_score/advertisement/ad_helper.dart';
 import 'package:cricket_live_score/constraints.dart';
 import 'package:cricket_live_score/screens/Homescreen.dart';
 import 'package:cricket_live_score/widgets/matchcard.dart';
 import 'package:cricket_live_score/widgets/upcoming_card.dart';
+import 'package:device_info/device_info.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart' as http;
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -25,10 +31,12 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
   // ignore: close_sinks
   StreamController<DetailsModel>? detailstreamController;
   ScrollController? scrollController;
-
+  late FlutterTts flutterTts;
   late BannerAd _bannerAd;
 
   bool _isBannerAdReady = false;
+
+  bool get isAndroid => Platform.isAndroid;
 
   @override
   void initState() {
@@ -58,9 +66,73 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
     Future.delayed(Duration(seconds: 1), () {
       fetchAlbum(widget.uid!).then((value) => timerfunction());
     });
-
+    flutterTts = FlutterTts();
+    _getDefaultEngine();
     super.initState();
   }
+
+  // initTts() {
+  //   flutterTts = FlutterTts();
+
+  //   if (isAndroid) {
+  //     _getDefaultEngine();
+  //   }
+
+  // flutterTts.setStartHandler(() {
+  //   setState(() {
+  //     print("Playing");
+  //     ttsState = TtsState.playing;
+  //   });
+  // });
+
+  // flutterTts.setCompletionHandler(() {
+  //   setState(() {
+  //     print("Complete");
+  //     ttsState = TtsState.stopped;
+  //   });
+  // });
+
+  // flutterTts.setCancelHandler(() {
+  //   setState(() {
+  //     print("Cancel");
+  //     ttsState = TtsState.stopped;
+  //   });
+  // });
+
+  // flutterTts.setErrorHandler((msg) {
+  //   setState(() {
+  //     print("error: $msg");
+  //     ttsState = TtsState.stopped;
+  //   });
+  // });
+  // }
+
+  Future _getDefaultEngine() async {
+    await flutterTts.getDefaultEngine;
+  }
+
+  //  Future _speak() async {
+  //   await flutterTts.setVolume(volume);
+  //   await flutterTts.setSpeechRate(rate);
+  //   await flutterTts.setPitch(pitch);
+
+  //   if (_newVoiceText != null) {
+  //     if (_newVoiceText!.isNotEmpty) {
+  //       await flutterTts.awaitSpeakCompletion(true);
+  //       await flutterTts.speak(_newVoiceText!);
+  //     }
+  //   }
+  // }
+
+  // Future _stop() async {
+  //   var result = await flutterTts.stop();
+  //   if (result == 1) setState(() => ttsState = TtsState.stopped);
+  // }
+
+  // Future _pause() async {
+  //   var result = await flutterTts.pause();
+  //   if (result == 1) setState(() => ttsState = TtsState.paused);
+  // }
 
   timerfunction() {
     Timer.periodic(Duration(milliseconds: 300), (timer) {
@@ -70,8 +142,10 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
 
   void dispose() {
     detailstreamController!.close();
-
+    _bannerAd.dispose();
+    _interstitialAd!.dispose();
     scrollController!.dispose();
+    flutterTts.stop();
     super.dispose();
   }
 
@@ -135,6 +209,23 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
         style: TextStyle(color: Colors.white),
       )),
     );
+  }
+
+  Future f(String text) async {
+    await flutterTts.speak(text);
+  }
+
+  FutureBuilder sp(String text) {
+    return FutureBuilder(
+        future: f(text),
+        builder: (BuildContext context, snapshot) {
+          if (snapshot.hasData) {
+            print(snapshot.hasData);
+            return Container();
+          } else {
+            return Container();
+          }
+        });
   }
 
   Widget textWidget(String title1, String title2) {
@@ -244,6 +335,21 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
     );
   }
 
+  Future backAdFunction() async {
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection("Users")
+        .doc(androidInfo.androidId)
+        .get();
+    if (_isInterstitialAdReady && doc['premium'] == false) {
+      _interstitialAd?.show();
+    } else if (_isInterstitialAdReady && doc['premium'] == true) {
+      Navigator.pop(context);
+    } else {
+      Navigator.pop(context);
+    }
+  }
+
   Widget detailsScreen() {
     return StreamBuilder(
         stream: detailstreamController!.stream,
@@ -263,12 +369,12 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                 elevation: 0,
                 leading: IconButton(
                   onPressed: () {
-                    if (_isInterstitialAdReady) {
-                      
-                      _interstitialAd?.show();
-                    } else {
-                      Navigator.pop(context);
-                    }
+                    backAdFunction();
+                    // if (_isInterstitialAdReady) {
+                    //   _interstitialAd?.show();
+                    // } else {
+                    //   Navigator.pop(context);
+                    // }
                   },
                   icon: Icon(Icons.arrow_back),
                 ),
@@ -347,6 +453,8 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
                                           children: [
+                                            sp(model.home.cs['msg']),
+
                                             // Icon(
                                             //   EvaIcons.volumeMuteOutline,
                                             //   color: Colors.white,
@@ -1143,20 +1251,45 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
         });
   }
 
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  Future checkpremium() async {
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection("Users")
+        .doc(androidInfo.androidId)
+        .get();
+    return doc;
+  }
+
+  Widget adwidget() {
+    return FutureBuilder(
+        future: checkpremium(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            DocumentSnapshot doc = snapshot.data;
+            // print(doc['premium']);
+            return _isBannerAdReady && doc['premium'] == false
+                ? Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      width: _bannerAd.size.width.toDouble(),
+                      height: _bannerAd.size.height.toDouble(),
+                      child: AdWidget(ad: _bannerAd),
+                    ),
+                  )
+                : Container();
+          } else {
+            return Container();
+          }
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         detailsScreen(),
-        if (_isBannerAdReady)
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              width: _bannerAd.size.width.toDouble(),
-              height: _bannerAd.size.height.toDouble(),
-              child: AdWidget(ad: _bannerAd),
-            ),
-          ),
+        adwidget(),
       ],
     );
   }
