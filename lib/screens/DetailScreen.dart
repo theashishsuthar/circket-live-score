@@ -334,7 +334,7 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
       ),
     );
   }
-
+////
   Future backAdFunction() async {
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
     DocumentSnapshot doc = await FirebaseFirestore.instance
