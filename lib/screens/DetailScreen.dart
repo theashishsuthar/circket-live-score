@@ -453,7 +453,7 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
                                           children: [
-                                            sp(model.home.cs['msg']),
+                                            // sp(model.home.cs['msg']),
 
                                             // Icon(
                                             //   EvaIcons.volumeMuteOutline,
