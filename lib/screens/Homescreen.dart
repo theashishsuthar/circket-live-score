@@ -128,6 +128,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('A new onMessageOpenedApp event was published!');
+      print(message.data);
+      if (message.data['gameId'] != null) {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (BuildContext context) {
+          return ScoreDetailScreen(
+            uid: message.data['gameId'],
+          );
+        }));
+      }
       //   Navigator.pushNamed(context, '/message',
       //       arguments: MessageArguments(message, true));
     });
@@ -396,7 +405,7 @@ class _LiveScoreState extends State<LiveScore> {
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body)['data'];
-    
+
         // return DataGet.fromJson(jsonDecode(response.body));
       } else {
         throw Exception('failed to load the data');

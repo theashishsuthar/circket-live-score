@@ -7,14 +7,21 @@ import 'package:device_info/device_info.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'package:splashscreen/splashscreen.dart';
+
 bool premiumStatus = false;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
+  RequestConfiguration configuration = RequestConfiguration(testDeviceIds: [
+    "ECE8592E40EC36DA1900EBE92963BB3C",
+  ]);
+  MobileAds.instance.updateRequestConfiguration(configuration);
+
   await Firebase.initializeApp();
   runApp(MyApp());
 }
@@ -25,15 +32,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   void initState() {
     addORupdateData();
-    // TODO: implement initState
+    checkpremium();
     super.initState();
-    print(checkpremium());
   }
-
 
   Future checkpremium() async {
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
@@ -41,24 +45,20 @@ class _MyAppState extends State<MyApp> {
         .collection("Users")
         .doc(androidInfo.androidId)
         .get();
-    if(doc.exists){
+    if (doc.exists) {
       setState(() {
-          premiumStatus = doc['premium'];
+        premiumStatus = doc['premium'];
       });
-    }else{
-      
     }
-
   }
 
-  
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
-   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-
-   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
   Future addORupdateData() async {
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+
     DocumentSnapshot doc = await FirebaseFirestore.instance
         .collection("Users")
         .doc(androidInfo.androidId)

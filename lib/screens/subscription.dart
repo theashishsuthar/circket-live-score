@@ -17,35 +17,30 @@ final List<String> duration = [
 
 class Subscription extends StatefulWidget {
   //rzp_test_XF0TQwHrsnczbj
-  
 
   @override
   _SubscriptionState createState() => _SubscriptionState();
 }
 
 class _SubscriptionState extends State<Subscription> {
-  
-
   @override
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height,
-
-
 
       decoration: BoxDecoration(
           gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: <Color>[startingColor, endingColor])),
-    
-      child:  PricingCard(
-              imagePath: 'assets/Images/1.png',
-              isMonthly: true,
-              duration: 'Monthly',
-              price: '100',
-            ),
-      
+
+      child: PricingCard(
+        imagePath: 'assets/Images/1.png',
+        isMonthly: true,
+        duration: 'Monthly',
+        price: '100',
+      ),
+
       // CarouselSlider(
       //     options: CarouselOptions(
       //       autoPlay: false,
@@ -73,5 +68,37 @@ class _SubscriptionState extends State<Subscription> {
       //       // ),
       //     ]),
     );
+  }
+}
+
+class SubscriptionWidget extends StatefulWidget {
+  const SubscriptionWidget({Key? key}) : super(key: key);
+
+  @override
+  _SubscriptionWidgetState createState() => _SubscriptionWidgetState();
+}
+
+class _SubscriptionWidgetState extends State<SubscriptionWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        height: MediaQuery.of(context).size.height,
+        padding: EdgeInsets.only(
+          top: MediaQuery.of(context).size.height * 0.08,
+          bottom: MediaQuery.of(context).size.height * 0.05,
+        ),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: <Color>[startingColor, endingColor],
+          ),
+        ),
+        child: PricingCard(
+          imagePath: 'assets/Images/1.png',
+          isMonthly: true,
+          duration: 'Monthly',
+          price: '100',
+        ));
   }
 }

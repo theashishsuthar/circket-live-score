@@ -5,7 +5,9 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cricket_live_score/advertisement/ad_helper.dart';
 import 'package:cricket_live_score/constraints.dart';
+import 'package:cricket_live_score/main.dart';
 import 'package:cricket_live_score/screens/Homescreen.dart';
+import 'package:cricket_live_score/screens/subscription.dart';
 import 'package:cricket_live_score/widgets/matchcard.dart';
 import 'package:cricket_live_score/widgets/upcoming_card.dart';
 import 'package:device_info/device_info.dart';
@@ -180,6 +182,15 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
     }
   }
 
+  Future checkpremium() async {
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection("Users")
+        .doc(androidInfo.androidId)
+        .get();
+    return doc;
+  }
+
   Widget redcard(String data) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.035,
@@ -334,6 +345,7 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
       ),
     );
   }
+
 ////
   Future backAdFunction() async {
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
@@ -483,12 +495,10 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                       fontFamily: 'SourceSansPro-Regular',
                                     ),
                                     child: AnimatedTextKit(
-                                      
                                       isRepeatingAnimation: true,
                                       repeatForever: true,
                                       animatedTexts: [
                                         ScaleAnimatedText(
-                                          
                                           model.home.cs['msg'] == 'OC'
                                               ? "Over complete"
                                               : model.home.cs['msg'] == 'B'
@@ -1055,33 +1065,153 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               Text('Prediction'),
-                              DefaultTextStyle(
-                                  style: const TextStyle(
-                                    fontSize: 14.0,
-                                    color: Colors.black,
-                                    fontFamily: 'SourceSansPro-Regular',
-                                  ),
-                                  child: AnimatedTextKit(
-                                      isRepeatingAnimation: true,
-                                      repeatForever: true,
-                                      animatedTexts: [
-                                        ColorizeAnimatedText(
-                                          'Your prediction will shows here.',
-                                          textStyle: TextStyle(
-                                              fontSize: 14.0,
-                                              fontWeight: FontWeight.bold),
-                                          colors: [
-                                            Colors.orange,
-                                            startingColor,
-                                            Colors.orange,
-                                            endingColor,
-                                          ],
-                                          speed: Duration(milliseconds: 300),
-                                        )
-                                        // RotateAnimatedText('England will'),
-                                        // RotateAnimatedText('win by'),
-                                        // RotateAnimatedText('24 runs'),
-                                      ])),
+                              FutureBuilder(
+                                  future: checkpremium(),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot snapshot) {
+                                    if (snapshot.hasData) {
+                                      DocumentSnapshot doc = snapshot.data;
+                                      return doc['premium']
+                                          ? StreamBuilder(
+                                              stream: FirebaseFirestore.instance
+                                                  .collection('matchprediction')
+                                                  .doc(widget.uid)
+                                                  .snapshots(),
+                                              builder: (BuildContext context,
+                                                  AsyncSnapshot snapshot) {
+                                                if (snapshot.hasData) {
+                                                  DocumentSnapshot doc =
+                                                      snapshot.data;
+                                                  return DefaultTextStyle(
+                                                      style: const TextStyle(
+                                                        fontSize: 14.0,
+                                                        color: Colors.black,
+                                                        fontFamily:
+                                                            'SourceSansPro-Regular',
+                                                      ),
+                                                      child: AnimatedTextKit(
+                                                          isRepeatingAnimation:
+                                                              true,
+                                                          repeatForever: true,
+                                                          animatedTexts: [
+                                                            ColorizeAnimatedText(
+                                                              doc.exists
+                                                                  ? doc[
+                                                                      'message']
+                                                                  : "Match prediction will be release soon.",
+                                                              // 'Your prediction will shows here.',
+                                                              textStyle: TextStyle(
+                                                                  fontSize:
+                                                                      14.0,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                              colors: [
+                                                                Colors.orange,
+                                                                startingColor,
+                                                                Colors.orange,
+                                                                endingColor,
+                                                              ],
+                                                              speed: Duration(
+                                                                  milliseconds:
+                                                                      300),
+                                                            )
+                                                            // RotateAnimatedText('England will'),
+                                                            // RotateAnimatedText('win by'),
+                                                            // RotateAnimatedText('24 runs'),
+                                                          ]));
+                                                } else {
+                                                  return Container();
+                                                }
+                                              })
+                                          : DefaultTextStyle(
+                                              style: const TextStyle(
+                                                fontSize: 14.0,
+                                                color: Colors.black,
+                                                fontFamily:
+                                                    'SourceSansPro-Regular',
+                                              ),
+                                              child: AnimatedTextKit(
+                                                  isRepeatingAnimation: true,
+                                                  repeatForever: true,
+                                                  onTap: () {
+                                                    Navigator.push(context,
+                                                        MaterialPageRoute(
+                                                            builder:
+                                                                (BuildContext
+                                                                    context) {
+                                                      return Scaffold(
+                                                        appBar: AppBar(
+                                                          flexibleSpace:
+                                                              Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              gradient:
+                                                                  LinearGradient(
+                                                                begin: Alignment
+                                                                    .topLeft,
+                                                                end: Alignment
+                                                                    .bottomRight,
+                                                                colors: <Color>[
+                                                                  startingColor,
+                                                                  endingColor,
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          title: Text(
+                                                              'Subscription'),
+                                                          centerTitle: true,
+                                                          leading: IconButton(
+                                                            onPressed: () {
+                                                              Navigator
+                                                                  .pushReplacement(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder:
+                                                                      (BuildContext
+                                                                          context) {
+                                                                    return MyApp();
+                                                                  },
+                                                                ),
+                                                              );
+                                                            },
+                                                            icon: Icon(
+                                                              Icons.arrow_back,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        body:
+                                                            SubscriptionWidget(),
+                                                      );
+                                                    }));
+                                                  },
+                                                  animatedTexts: [
+                                                    ColorizeAnimatedText(
+                                                      'Purchase a subscription, and enable to prediction',
+                                                      textStyle: TextStyle(
+                                                          fontSize: 14.0,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                      colors: [
+                                                        Colors.orange,
+                                                        startingColor,
+                                                        Colors.orange,
+                                                        endingColor,
+                                                      ],
+                                                      speed: Duration(
+                                                          milliseconds: 300),
+                                                    )
+                                                    // RotateAnimatedText('England will'),
+                                                    // RotateAnimatedText('win by'),
+                                                    // RotateAnimatedText('24 runs'),
+                                                  ]));
+                                    } else {
+                                      return Container();
+                                    }
+                                  }),
                             ],
                           ),
                         ),
@@ -1198,38 +1328,53 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
               ),
             );
           } else if (snapshot.hasError) {
-            return Container(
-              color: Colors.white,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(
-                      left: MediaQuery.of(context).size.width * 0.05,
-                      top: MediaQuery.of(context).size.height * 0.08,
-                      right: MediaQuery.of(context).size.width * 0.05,
-                    ),
-                    height: MediaQuery.of(context).size.height * 0.25,
-                    width: double.infinity,
-                    child: Image.asset(
-                      'assets/Images/logo2.png',
-                      scale: 1,
-                    ),
+            return Scaffold(
+              appBar: AppBar(
+                elevation: 0,
+                backgroundColor: Colors.white,
+                leading: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Colors.deepPurple,
                   ),
-                  Container(
-                    child: Text(
-                      "Oops, information not available!",
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: Colors.indigo[800],
-                        fontSize: 15,
-                        decoration: TextDecoration.none,
-                        fontWeight: FontWeight.bold,
+                ),
+              ),
+              body: Container(
+                color: Colors.white,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(
+                        left: MediaQuery.of(context).size.width * 0.05,
+                        top: MediaQuery.of(context).size.height * 0.08,
+                        right: MediaQuery.of(context).size.width * 0.05,
+                      ),
+                      height: MediaQuery.of(context).size.height * 0.25,
+                      width: double.infinity,
+                      child: Image.asset(
+                        'assets/Images/logo2.png',
+                        scale: 1,
                       ),
                     ),
-                  ),
-                ],
+                    Container(
+                      child: Text(
+                        "Oops, information not available!",
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.indigo[800],
+                          fontSize: 15,
+                          decoration: TextDecoration.none,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             );
           } else {
@@ -1255,14 +1400,14 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
   }
 
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-  Future checkpremium() async {
-    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-    DocumentSnapshot doc = await FirebaseFirestore.instance
-        .collection("Users")
-        .doc(androidInfo.androidId)
-        .get();
-    return doc;
-  }
+  // Future checkpremium() async {
+  //   AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+  //   DocumentSnapshot doc = await FirebaseFirestore.instance
+  //       .collection("Users")
+  //       .doc(androidInfo.androidId)
+  //       .get();
+  //   return doc;
+  // }
 
   Widget adwidget() {
     return FutureBuilder(
