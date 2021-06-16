@@ -4,8 +4,10 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cricket_live_score/advertisement/ad_helper.dart';
 import 'package:cricket_live_score/constraints.dart';
+import 'package:cricket_live_score/main.dart';
 import 'package:cricket_live_score/screens/DetailScreen.dart';
 import 'package:cricket_live_score/screens/subscription.dart';
+import 'package:cricket_live_score/screens/subscriptionHistory.dart';
 import 'package:cricket_live_score/widgets/matchcard.dart';
 import 'package:device_info/device_info.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -80,6 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
     handle();
 
     _bannerAd.load();
+    print(premiumStatus);
     super.initState();
   }
 
@@ -324,7 +327,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         colors: <Color>[startingColor, endingColor])),
                 child: UpcomingMatches(),
               ),
-              Subscription()
+              premiumStatus ? SubscriptionHistory() : Subscription()
             ],
           ),
         ),

@@ -363,30 +363,7 @@ class _PricingCardState extends State<PricingCard> {
                   style: TextStyle(color: Colors.black),
                 )),
           ),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.40,
-            child: ElevatedButton(
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.white),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5.0),
-                          side: BorderSide(
-                            color: Colors.green,
-                          )),
-                    )),
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (BuildContext context) {
-                    return SubscriptionHistory();
-                  }));
-                },
-                child: Text(
-                  'Subscription History',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.black),
-                )),
-          ),
+          
           Container(
             margin: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.04,

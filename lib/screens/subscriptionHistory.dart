@@ -35,20 +35,20 @@ class _SubscriptionHistoryState extends State<SubscriptionHistory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        centerTitle: true,
-        title: Text(
-          'Your Subscription',
-          style: appBarTitleTextStyle,
-        ),
-        flexibleSpace: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: <Color>[startingColor, endingColor]))),
-      ),
+      // appBar: AppBar(
+      //   elevation: 0,
+      //   centerTitle: true,
+      //   title: Text(
+      //     'Your Subscription',
+      //     style: appBarTitleTextStyle,
+      //   ),
+      //   flexibleSpace: Container(
+      //       decoration: BoxDecoration(
+      //           gradient: LinearGradient(
+      //               begin: Alignment.topLeft,
+      //               end: Alignment.bottomRight,
+      //               colors: <Color>[startingColor, endingColor]))),
+      // ),
       body: FutureBuilder<QuerySnapshot>(
         future: paymenthistory(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {

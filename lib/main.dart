@@ -11,7 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'package:splashscreen/splashscreen.dart';
-
+bool premiumStatus = false;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
@@ -31,7 +31,27 @@ class _MyAppState extends State<MyApp> {
     addORupdateData();
     // TODO: implement initState
     super.initState();
+    print(checkpremium());
   }
+
+
+  Future checkpremium() async {
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection("Users")
+        .doc(androidInfo.androidId)
+        .get();
+    if(doc.exists){
+      setState(() {
+          premiumStatus = doc['premium'];
+      });
+    }else{
+      
+    }
+
+  }
+
+  
 
    final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
