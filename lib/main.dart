@@ -1,6 +1,7 @@
 // @dart=2.9
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cricket_live_score/screens/DetailScreen.dart';
 import 'package:cricket_live_score/screens/Homescreen.dart';
 import 'package:device_info/device_info.dart';
 
@@ -17,10 +18,10 @@ bool premiumStatus = false;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
-  RequestConfiguration configuration = RequestConfiguration(testDeviceIds: [
-    "ECE8592E40EC36DA1900EBE92963BB3C",
-  ]);
-  MobileAds.instance.updateRequestConfiguration(configuration);
+  // RequestConfiguration configuration = RequestConfiguration(testDeviceIds: [
+  //   "ECE8592E40EC36DA1900EBE92963BB3C",
+  // ]);
+  // MobileAds.instance.updateRequestConfiguration(configuration);
 
   await Firebase.initializeApp();
   runApp(MyApp());
@@ -36,8 +37,11 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     addORupdateData();
     checkpremium();
+    
     super.initState();
   }
+
+  
 
   Future checkpremium() async {
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;

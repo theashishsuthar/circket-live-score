@@ -78,12 +78,33 @@ class _HomeScreenState extends State<HomeScreen> {
     // addORupdateData();
     changePremiumuserStatus();
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    flutterLocalNotificationsPlugin.initialize(
+        InitializationSettings(
+          android: AndroidInitializationSettings('@drawable/ic_launcher'),
+        ),
+        onSelectNotification: selectnotificationlocal);
     setup();
     handle();
 
     _bannerAd.load();
     print(premiumStatus);
     super.initState();
+  }
+
+  Future selectnotificationlocal(String? message) async {
+    print(message);
+    if (message != null && message.isNotEmpty) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) {
+            return ScoreDetailScreen(
+              uid: message,
+            );
+          },
+        ),
+      );
+    }
   }
 
   Future setup() async {
@@ -103,26 +124,40 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future handle() async {
+    RemoteMessage? message =
+        await FirebaseMessaging.instance.getInitialMessage();
+    if (message != null) {
+      if (message.data['gameId'] != null) {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (BuildContext context) {
+          return ScoreDetailScreen(
+            uid: message.data['gameId'],
+          );
+        }));
+      }
+    }
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification notification = message.notification!;
       AndroidNotification? android = message.notification?.android;
       if (android != null && !kIsWeb) {
         flutterLocalNotificationsPlugin.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
-            NotificationDetails(
-              android: AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                channel.description,
-                icon: "@drawable/ic_launcher",
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              channel.description,
+              icon: "@drawable/ic_launcher",
 
-                importance: Importance.high,
+              importance: Importance.high,
 
-                // icon: 'launch_background',
-              ),
-            ));
+              // icon: 'launch_background',
+            ),
+          ),
+          payload: message.data['gameId'],
+        );
       }
     });
 
@@ -140,6 +175,22 @@ class _HomeScreenState extends State<HomeScreen> {
       //   Navigator.pushNamed(context, '/message',
       //       arguments: MessageArguments(message, true));
     });
+
+    // FirebaseMessaging.onBackgroundMessage((message) {
+    //   if (message.data['gameId'] != null) {
+    //     return Navigator.push(context,
+    //         MaterialPageRoute(builder: (BuildContext context) {
+    //       return ScoreDetailScreen(
+    //         uid: message.data['gameId'],
+    //       );
+    //     }));
+    //   } else {
+    //     return Navigator.pushReplacement(context,
+    //         MaterialPageRoute(builder: (BuildContext context) {
+    //       return MyApp();
+    //     }));
+    //   }
+    // });
   }
 
   // Future? handle() async {
@@ -336,7 +387,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         colors: <Color>[startingColor, endingColor])),
                 child: UpcomingMatches(),
               ),
-              premiumStatus ? SubscriptionHistory() : Subscription()
+              // premiumStatus ? SubscriptionHistory() : Subscription()
+              FutureBuilder(
+                  future: checkpremium(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      DocumentSnapshot doc = snapshot.data;
+                      return doc['premium']
+                          ? SubscriptionHistory()
+                          : Subscription();
+                    } else {
+                      return Container();
+                    }
+                  }),
             ],
           ),
         ),
