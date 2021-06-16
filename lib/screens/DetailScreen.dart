@@ -477,15 +477,18 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                     ],
                                   ),
                                   DefaultTextStyle(
+                                    textAlign: TextAlign.center,
                                     style: const TextStyle(
                                       fontSize: 19.0,
                                       fontFamily: 'SourceSansPro-Regular',
                                     ),
                                     child: AnimatedTextKit(
+                                      
                                       isRepeatingAnimation: true,
                                       repeatForever: true,
                                       animatedTexts: [
                                         ScaleAnimatedText(
+                                          
                                           model.home.cs['msg'] == 'OC'
                                               ? "Over complete"
                                               : model.home.cs['msg'] == 'B'
@@ -505,7 +508,7 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                   Container(
                                     margin: EdgeInsets.only(
                                       top: MediaQuery.of(context).size.height *
-                                          0.02,
+                                          0.01,
                                     ),
                                     padding: EdgeInsets.symmetric(
                                         horizontal:

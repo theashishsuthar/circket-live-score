@@ -396,7 +396,7 @@ class _LiveScoreState extends State<LiveScore> {
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body)['data'];
-
+    
         // return DataGet.fromJson(jsonDecode(response.body));
       } else {
         throw Exception('failed to load the data');
