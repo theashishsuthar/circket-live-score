@@ -30,11 +30,11 @@ class _HomeScreenState extends State<HomeScreen> {
   FlutterLocalNotificationsPlugin notifications =
       FlutterLocalNotificationsPlugin();
   late BannerAd _bannerAd;
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
   late AndroidNotificationChannel channel;
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   bool _isBannerAdReady = false;
-  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
   @override
   void initState() {
@@ -73,11 +73,12 @@ class _HomeScreenState extends State<HomeScreen> {
     //   initializationSettings,
     // );
 
-    addORupdateData();
+    // addORupdateData();
     changePremiumuserStatus();
-    handle();
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     setup();
+    handle();
+
     _bannerAd.load();
     super.initState();
   }
@@ -112,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 channel.id,
                 channel.name,
                 channel.description,
-                // icon: "@drawable/ic_launcher",
+                icon: "@drawable/ic_launcher",
 
                 importance: Importance.high,
 
@@ -190,33 +191,6 @@ class _HomeScreenState extends State<HomeScreen> {
 //  'premiumStart': Timestamp.now(),
 //             'premiumEnd': Timestamp.fromDate(DateTime(DateTime.now().year,
 //                 DateTime.now().month + 1, DateTime.now().day))
-  Future addORupdateData() async {
-    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-    DocumentSnapshot doc = await FirebaseFirestore.instance
-        .collection("Users")
-        .doc(androidInfo.androidId)
-        .get();
-    String? token = await _firebaseMessaging!.getToken().then((token) {
-      return token;
-    });
-    if (doc.exists) {
-      _firebaseMessaging!.getToken().then((tokens) async {
-        await FirebaseFirestore.instance
-            .collection("Users")
-            .doc(androidInfo.androidId)
-            .update({'androidNotificationToken': tokens});
-      });
-    } else {
-      await FirebaseFirestore.instance
-          .collection("Users")
-          .doc(androidInfo.androidId)
-          .set({
-        "premium": false,
-        "PremiumEnd": Timestamp.now(),
-        'androidNotificationToken': token,
-      });
-    }
-  }
 
   Future androidId() async {
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;

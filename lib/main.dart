@@ -1,8 +1,11 @@
 // @dart=2.9
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cricket_live_score/screens/Homescreen.dart';
+import 'package:device_info/device_info.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -16,7 +19,53 @@ void main() async {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  @override
+  void initState() {
+    addORupdateData();
+    // TODO: implement initState
+    super.initState();
+  }
+
+   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
+   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+  Future addORupdateData() async {
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    DocumentSnapshot doc = await FirebaseFirestore.instance
+        .collection("Users")
+        .doc(androidInfo.androidId)
+        .get();
+    String token = await _firebaseMessaging.getToken().then((token) {
+      return token;
+    });
+    if (doc.exists) {
+      _firebaseMessaging.getToken().then((tokens) async {
+        await FirebaseFirestore.instance
+            .collection("Users")
+            .doc(androidInfo.androidId)
+            .update({'androidNotificationToken': tokens});
+      });
+    } else {
+      await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(androidInfo.androidId)
+          .set({
+        "uid": androidInfo.androidId,
+        "premium": false,
+        "PremiumEnd": Timestamp.now(),
+        'androidNotificationToken': token,
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);

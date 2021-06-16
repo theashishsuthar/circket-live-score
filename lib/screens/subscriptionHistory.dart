@@ -81,15 +81,15 @@ class _SubscriptionHistoryState extends State<SubscriptionHistory> {
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(12)),
                             padding: EdgeInsets.only(
-                              left: MediaQuery.of(context).size.width * 0.05,
-                              right: MediaQuery.of(context).size.width * 0.05,
+                              left: MediaQuery.of(context).size.width * 0.04,
+                              right: MediaQuery.of(context).size.width * 0.04,
                             ),
                             child: doc['premium'] == true
                                 ? Row(
                                     // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: [
                                       Text(
-                                          'your current susbcription valid till'),
+                                          'Your current susbcription valid till'),
                                       Text(
                                         '  ${DateFormat("dd MMM yyyy").format(DateTime.parse(doc['PremiumEnd'].toDate().toString()))}',
                                         style: TextStyle(
