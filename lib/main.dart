@@ -37,11 +37,9 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     addORupdateData();
     checkpremium();
-    
+
     super.initState();
   }
-
-  
 
   Future checkpremium() async {
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
@@ -85,6 +83,7 @@ class _MyAppState extends State<MyApp> {
         "uid": androidInfo.androidId,
         "premium": false,
         "PremiumEnd": Timestamp.now(),
+        "time": Timestamp.now(),
         'androidNotificationToken': token,
       });
     }

@@ -156,6 +156,7 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
     //http://13.235.241.13/getgames/cricket
     //http://139.59.82.99:3000/api/match/getMatchScore?eventId=30589258
     //30595134
+    //30619062
     try {
       final response = await http.get(
         Uri.parse(
@@ -549,9 +550,9 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                                     fontSize: 18),
                                                 children: <TextSpan>[
                                               TextSpan(
-                                                text: model.home.i1['ov'] +
-                                                    " " +
-                                                    "overs",
+                                                text: "(" +
+                                                    model.home.i1['ov'] +
+                                                    ")",
                                                 style: TextStyle(
                                                     color: Colors.grey,
                                                     letterSpacing: 0.8,
@@ -587,9 +588,9 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                                         model.home.i2['ov'] ==
                                                             ""
                                                     ? ""
-                                                    : model.home.i2['ov'] +
-                                                        " " +
-                                                        "overs",
+                                                    : "(" +
+                                                        model.home.i2['ov'] +
+                                                        ")",
                                                 style: TextStyle(
                                                     color: Colors.grey,
                                                     letterSpacing: 0.8,
@@ -639,8 +640,11 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                               'Run needed',
                                               ' ${(int.parse(model.home.i2['tr']) - int.parse(model.home.i2['sc'])).toString()}',
                                             ),
-                                            textWidget('Overs Rem',
-                                                ' ${(double.parse(model.home.iov!) - double.parse(model.home.i2['ov'])).toString()}'),
+                                            textWidget(
+                                              'Balls Rem',
+                                              // ' ${(double.parse(model.home.iov!) - double.parse(model.home.i2['ov'])).toString()}'
+                                              ' ${((double.parse(model.home.iov!).floor() * 6) - (double.parse(model.home.i2['ov']).floor() * 6 + ((double.parse(model.home.i2['ov']) % 1) * 10).floor()))}',
+                                            ),
                                           ],
                                         )
                                       : Container(),
@@ -655,7 +659,12 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceEvenly,
                                           children: [
-                                            textWidget('R.R.R', ' 5.5'),
+                                            textWidget('R.R.R',
+                                                ' ${(double.parse(model.home.i2['tr']) - double.parse(model.home.i2['sc']))/(((double.parse(model.home.iov!).floor() * 6) - (double.parse(model.home.i2['ov']).floor() * 6 + ((double.parse(model.home.i2['ov']) % 1) * 10).floor()))/6 ).ceil()}'),
+                                            //(double.parse(model.home.i2['tr']) - double.parse(model.home.i2['sc']))
+                                            //
+                                            //floor(Overs)*6 + floor((Overs%1)*10)
+                                            //double.parse(model.home.i2['tr'])-double.parse(model.home.i2['sc'])/((double.parse(model.home.iov!).floor() * 6) - (double.parse(model.home.i2['ov']).floor() * 6 + ((double.parse(model.home.i2['ov']) % 1) * 10).floor())/6)
                                             textWidget('C.R.R',
                                                 ' ${(double.parse(model.home.i2['sc']) / double.parse(model.home.i2['ov'])).ceil().toString()}'),
                                             textWidget('Target',
@@ -766,7 +775,7 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                         ),
                       ),
                       Container(
-                        height: MediaQuery.of(context).size.height * 0.25,
+                        height: MediaQuery.of(context).size.height * 0.268,
                         width: double.infinity,
                         margin: EdgeInsets.all(
                             MediaQuery.of(context).size.height * 0.01),
@@ -943,6 +952,31 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                           TextStyle(color: Colors.deepPurple),
                                     ),
                                   ),
+                                ],
+                              ),
+                            ),
+                            Divider(),
+                            // SizedBox(
+                            //   height: MediaQuery.of(context).size.height * 0.01,
+                            // ),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  left:
+                                      MediaQuery.of(context).size.height * 0.02,
+                                  right: MediaQuery.of(context).size.height *
+                                      0.01),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Baller' + ":  ",
+                                    style: TextStyle(
+                                      color: Colors.deepPurple,
+                                    ),
+                                  ),
+                                  Text(
+                                    model.home.bw!,
+                                    style: TextStyle(color: Colors.deepPurple),
+                                  )
                                 ],
                               ),
                             )
@@ -1481,6 +1515,7 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.uid);
     return Stack(
       children: [
         detailsScreen(),
