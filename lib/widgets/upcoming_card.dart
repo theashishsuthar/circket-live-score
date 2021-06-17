@@ -122,6 +122,7 @@ class _UpComingMatchCardState extends State<UpComingMatchCard> {
                                     radius: 16,
                                     backgroundColor: Colors.black,
                                     child: Text(
+                                      // widget.title.toString().substring(0,2),
                                       model.home.t1['n']
                                           .toString()
                                           .substring(0, 2),
@@ -208,7 +209,43 @@ class _UpComingMatchCardState extends State<UpComingMatchCard> {
                         widget.title!,
                         style: specialTitleTextStyle,
                       ),
-                      Text(widget.time!),
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                            horizontal:
+                                MediaQuery.of(context).size.width * 0.03),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CircleAvatar(
+                              backgroundColor: Colors.black,
+                              radius: 16,
+                              child: Text(
+                                widget.title!
+                                    .toString()
+                                    .toUpperCase()
+                                    .substring(0, 2),
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.white),
+                              ),
+                            ),
+                            Text(widget.time!),
+                            CircleAvatar(
+                              backgroundColor: Colors.black,
+                              radius: 16,
+                              child: Text(
+                                widget.title!
+                                    .toString()
+                                    .split('v')[1]
+                                    .trim()
+                                    .toUpperCase()
+                                    .substring(0, 2),
+                                style: TextStyle(
+                                    fontSize: 12, color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       Text(
                         "coming soon",
                         style: TextStyle(color: Colors.red),

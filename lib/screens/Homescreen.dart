@@ -318,7 +318,7 @@ class _HomeScreenState extends State<HomeScreen> {
             elevation: 0,
             centerTitle: true,
             title: Text(
-              'Crickscore',
+              'Cricket Line Master',
               style: appBarTitleTextStyle,
             ),
             flexibleSpace: Container(

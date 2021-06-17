@@ -69,8 +69,9 @@ class _MatchCardState extends State<MatchCard> {
 
   Widget team(String circleTitle, String title, String score, bool isBatting,
       String over, BuildContext context) {
+    //Changes maded
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8),
       child: Row(
         children: [
           isBatting
@@ -323,7 +324,7 @@ class _MatchCardState extends State<MatchCard> {
                                   : model.home.rt!.split(',')[2],
                               style: TextStyle(color: Colors.white),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -334,14 +335,19 @@ class _MatchCardState extends State<MatchCard> {
                       alignment: Alignment.center,
                       margin: EdgeInsets.symmetric(
                           horizontal: MediaQuery.of(context).size.width * 0.08),
-                      child: Text(
-                        model.home.con['lt'].toString(),
-                        style: TextStyle(
-                          color: endingColor,
-                          fontSize: 13,
-                          letterSpacing: 0.8,
-                        ),
-                      ),
+                      child: model.home.con['lt'].toString().isNotEmpty
+                          ? Text(
+                              model.home.con['lt'].toString(),
+                              style: TextStyle(
+                                color: endingColor,
+                                fontSize: 13,
+                                letterSpacing: 0.8,
+                              ),
+                            )
+                          : Text(
+                              'Live',
+                              style: TextStyle(color: Colors.red),
+                            ),
                     ),
                   ],
                 ));
@@ -392,6 +398,13 @@ class _MatchCardState extends State<MatchCard> {
                       Container(
                         child: Text(widget.title!.split("/")[1]),
                       ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.02,
+                      ),
+                      Text(
+                        'Live',
+                        style: TextStyle(color: Colors.red),
+                      )
                       // SizedBox(
                       //   height: MediaQuery.of(context).size.height * 0.02,
                       // ),

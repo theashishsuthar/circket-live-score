@@ -614,6 +614,9 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                           ],
                         ),
                       ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.015,
+                      ),
                       model.home.i == "i2" && model.home.con['mf'] != "Test"
                           ? Container(
                               height: MediaQuery.of(context).size.height * 0.12,
@@ -1124,90 +1127,134 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                                   return Container();
                                                 }
                                               })
-                                          : DefaultTextStyle(
-                                              style: const TextStyle(
-                                                fontSize: 14.0,
-                                                color: Colors.black,
-                                                fontFamily:
-                                                    'SourceSansPro-Regular',
-                                              ),
-                                              child: AnimatedTextKit(
-                                                  isRepeatingAnimation: true,
-                                                  repeatForever: true,
-                                                  onTap: () {
-                                                    Navigator.push(context,
-                                                        MaterialPageRoute(
-                                                            builder:
-                                                                (BuildContext
-                                                                    context) {
-                                                      return Scaffold(
-                                                        appBar: AppBar(
-                                                          flexibleSpace:
-                                                              Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              gradient:
-                                                                  LinearGradient(
-                                                                begin: Alignment
-                                                                    .topLeft,
-                                                                end: Alignment
-                                                                    .bottomRight,
-                                                                colors: <Color>[
-                                                                  startingColor,
-                                                                  endingColor,
-                                                                ],
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          title: Text(
-                                                              'Subscription'),
-                                                          centerTitle: true,
-                                                          leading: IconButton(
-                                                            onPressed: () {
-                                                              Navigator
-                                                                  .pushReplacement(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder:
-                                                                      (BuildContext
-                                                                          context) {
-                                                                    return MyApp();
-                                                                  },
-                                                                ),
-                                                              );
-                                                            },
-                                                            icon: Icon(
-                                                              Icons.arrow_back,
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
+                                          : ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(builder:
+                                                        (BuildContext context) {
+                                                  return Scaffold(
+                                                    appBar: AppBar(
+                                                      flexibleSpace: Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          gradient:
+                                                              LinearGradient(
+                                                            begin: Alignment
+                                                                .topLeft,
+                                                            end: Alignment
+                                                                .bottomRight,
+                                                            colors: <Color>[
+                                                              startingColor,
+                                                              endingColor,
+                                                            ],
                                                           ),
                                                         ),
-                                                        body:
-                                                            SubscriptionWidget(),
-                                                      );
-                                                    }));
-                                                  },
-                                                  animatedTexts: [
-                                                    ColorizeAnimatedText(
-                                                      'Purchase a subscription, and enable to prediction',
-                                                      textStyle: TextStyle(
-                                                          fontSize: 14.0,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                      colors: [
-                                                        Colors.orange,
-                                                        startingColor,
-                                                        Colors.orange,
-                                                        endingColor,
-                                                      ],
-                                                      speed: Duration(
-                                                          milliseconds: 300),
-                                                    )
-                                                    // RotateAnimatedText('England will'),
-                                                    // RotateAnimatedText('win by'),
-                                                    // RotateAnimatedText('24 runs'),
-                                                  ]));
+                                                      ),
+                                                      title:
+                                                          Text('Subscription'),
+                                                      centerTitle: true,
+                                                      leading: IconButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        icon: Icon(
+                                                          Icons.arrow_back,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    body: SubscriptionWidget(),
+                                                  );
+                                                }));
+                                              },
+                                              child: Text('Unlock Prediction'));
+                                      // DefaultTextStyle(
+                                      //     style: const TextStyle(
+                                      //       fontSize: 14.0,
+                                      //       color: Colors.black,
+                                      //       fontFamily:
+                                      //           'SourceSansPro-Regular',
+                                      //     ),
+                                      //     child: AnimatedTextKit(
+                                      //         isRepeatingAnimation: true,
+                                      //         repeatForever: true,
+                                      //         onTap: () {
+                                      //           Navigator.push(context,
+                                      //               MaterialPageRoute(
+                                      //                   builder:
+                                      //                       (BuildContext
+                                      //                           context) {
+                                      //             return Scaffold(
+                                      //               appBar: AppBar(
+                                      //                 flexibleSpace:
+                                      //                     Container(
+                                      //                   decoration:
+                                      //                       BoxDecoration(
+                                      //                     gradient:
+                                      //                         LinearGradient(
+                                      //                       begin: Alignment
+                                      //                           .topLeft,
+                                      //                       end: Alignment
+                                      //                           .bottomRight,
+                                      //                       colors: <Color>[
+                                      //                         startingColor,
+                                      //                         endingColor,
+                                      //                       ],
+                                      //                     ),
+                                      //                   ),
+                                      //                 ),
+                                      //                 title: Text(
+                                      //                     'Subscription'),
+                                      //                 centerTitle: true,
+                                      //                 leading: IconButton(
+                                      //                   onPressed: () {
+                                      //                     Navigator
+                                      //                         .pushReplacement(
+                                      //                       context,
+                                      //                       MaterialPageRoute(
+                                      //                         builder:
+                                      //                             (BuildContext
+                                      //                                 context) {
+                                      //                           return MyApp();
+                                      //                         },
+                                      //                       ),
+                                      //                     );
+                                      //                   },
+                                      //                   icon: Icon(
+                                      //                     Icons.arrow_back,
+                                      //                     color:
+                                      //                         Colors.white,
+                                      //                   ),
+                                      //                 ),
+                                      //               ),
+                                      //               body:
+                                      //                   SubscriptionWidget(),
+                                      //             );
+                                      //           }));
+                                      //         },
+                                      //         animatedTexts: [
+                                      //           ColorizeAnimatedText(
+                                      //             'Purchase a subscription, and enable to prediction',
+
+                                      //             textStyle: TextStyle(
+                                      //                 fontSize: 14.0,
+
+                                      //                 fontWeight:
+                                      //                     FontWeight.bold),
+                                      //             colors: [
+                                      //               Colors.orange,
+                                      //               startingColor,
+                                      //               Colors.orange,
+                                      //               endingColor,
+                                      //             ],
+                                      //             speed: Duration(
+                                      //                 milliseconds: 300),
+                                      //           )
+                                      //           // RotateAnimatedText('England will'),
+                                      //           // RotateAnimatedText('win by'),
+                                      //           // RotateAnimatedText('24 runs'),
+                                      //         ]));
                                     } else {
                                       return Container();
                                     }

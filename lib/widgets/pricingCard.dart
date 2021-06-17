@@ -39,14 +39,15 @@ class _PricingCardState extends State<PricingCard> {
 
   void openCheckout() async {
     var options = {
-      'key': 'rzp_test_XF0TQwHrsnczbj',
-      'amount': num.parse("100.00"),
+      // 'key': 'rzp_test_XF0TQwHrsnczbj',
+      'key':'rzp_live_5slR1LkCEaloJ3',
+      'amount': 100.0,
       'name': 'Subscription',
       'description': 'Subscription',
       // 'prefill': {'contact': '8888888888', 'email': 'test@razorpay.com'},
-      'external': {
-        'wallets': ['paytm']
-      }
+      // 'external': {
+      //   'wallets': ['paytm','phonepay']
+      // }
     };
 
     try {

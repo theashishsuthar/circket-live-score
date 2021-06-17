@@ -96,7 +96,7 @@ class _MyAppState extends State<MyApp> {
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     return MaterialApp(
-      title: 'Cricket live master',
+      title: 'Cricket line master',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'SourceSansPro-Regular',
@@ -105,7 +105,7 @@ class _MyAppState extends State<MyApp> {
       routes: {
         "/": (_) => SplashScreen(
               title: Text(
-                'Crickscore',
+                'Cricket Line Master',
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w700,
