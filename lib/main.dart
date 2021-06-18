@@ -18,10 +18,12 @@ bool premiumStatus = false;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
-  // RequestConfiguration configuration = RequestConfiguration(testDeviceIds: [
+  RequestConfiguration configuration = RequestConfiguration(
+  //   testDeviceIds: [
   //   "ECE8592E40EC36DA1900EBE92963BB3C",
-  // ]);
-  // MobileAds.instance.updateRequestConfiguration(configuration);
+  // ]
+  );
+  MobileAds.instance.updateRequestConfiguration(configuration);
 
   await Firebase.initializeApp();
   runApp(MyApp());

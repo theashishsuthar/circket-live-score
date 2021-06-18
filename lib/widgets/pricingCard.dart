@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cricket_live_score/screens/subscriptionHistory.dart';
 import 'package:device_info/device_info.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class PricingCard extends StatefulWidget {
@@ -37,21 +41,129 @@ class _PricingCardState extends State<PricingCard> {
     _razorpay.clear();
   }
 
-  void openCheckout() async {
-    var options = {
-      // 'key': 'rzp_test_XF0TQwHrsnczbj',
-      'key':'rzp_live_5slR1LkCEaloJ3',
-      'amount': 100.0,
-      'name': 'Subscription',
-      'description': 'Subscription',
-      // 'prefill': {'contact': '8888888888', 'email': 'test@razorpay.com'},
-      // 'external': {
-      //   'wallets': ['paytm','phonepay']
-      // }
+  Future<String> generateOrderId(String key, String secret, int amount) async {
+    var authn = 'Basic ' + base64Encode(utf8.encode('$key:$secret'));
+
+    var headers = {
+      'content-type': 'application/json',
+      'Authorization': authn,
     };
 
+    var data =
+        '{ "amount": $amount, "currency": "INR", "receipt": "receipt#R1", "payment_capture": 1 }';
+
+    var res = await http.post(Uri.parse("https://api.razorpay.com/v1/orders"),
+        headers: headers, body: data);
+    if (res.statusCode != 200)
+      throw Exception('http.post error: statusCode= ${res.statusCode}');
+    print('ORDER ID response => ${res.body}');
+
+    return json.decode(res.body)['id'].toString();
+  }
+
+  void openCheckout() async {
     try {
-      _razorpay.open(options);
+      DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection("Apikey")
+          .doc("+919557920831")
+          .get();
+      // String key = 'rzp_test_XF0TQwHrsnczbj';
+      // String key = 'rzp_live_5slR1LkCEaloJ3';
+      // String secret = 'esjnaE5MH9pjHhbsOC8oomyq';
+      String key = doc['key'];
+      String secret = doc['secretKey'];
+
+      var amount = 100 * 100;
+      //json.decode(res.body)['id'].toString();
+      var authn = 'Basic ' + base64Encode(utf8.encode('$key:$secret'));
+
+      var headers = {
+        'content-type': 'application/json',
+        'Authorization': authn,
+      };
+
+      var data =
+          '{ "amount": $amount, "currency": "INR", "receipt": "receipt#R1", "payment_capture": 1 }';
+
+      var res = await http.post(Uri.parse("https://api.razorpay.com/v1/orders"),
+          headers: headers, body: data);
+      if (res.statusCode == 200) {
+        var options = {
+          // 'key': 'rzp_test_XF0TQwHrsnczbj',
+          // 'key': 'rzp_live_5slR1LkCEaloJ3',
+          'key': key,
+          'amount': 100 * 100,
+          'order_id': json.decode(res.body)['id'].toString(),
+          'name': 'Subscription',
+          'description': 'Subscription',
+          // 'prefill': {'contact': '8888888888', 'email': 'test@razorpay.com'},
+          // 'external': {
+          //   'wallets': ['paytm','phonepay']
+          // }
+        };
+        try {
+          _razorpay.open(options);
+        } catch (e) {
+          return showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text(
+                    'Oops! something went wrong!',
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        'Okay',
+                      ),
+                    )
+                  ],
+                );
+              });
+        }
+      } else
+        throw Exception('http.post error: statusCode= ${res.statusCode}');
+      // print('ORDER ID response => ${res.body}');
+
+      // var options = {
+      //   // 'key': 'rzp_test_XF0TQwHrsnczbj',
+      //   'key': 'rzp_live_5slR1LkCEaloJ3',
+      //   'amount': 100 * 100,
+      //   'order_id': generateOrderId(key, secret, 100),
+      //   'name': 'Subscription',
+      //   'description': 'Subscription',
+      //   // 'prefill': {'contact': '8888888888', 'email': 'test@razorpay.com'},
+      //   // 'external': {
+      //   //   'wallets': ['paytm','phonepay']
+      //   // }
+      // };
+
+      // try {
+      //   _razorpay.open(options);
+      // } catch (e) {
+      //   return showDialog(
+      //       context: context,
+      //       builder: (BuildContext context) {
+      //         return AlertDialog(
+      //           title: Text(
+      //             'Oops! something went wrong!',
+      //           ),
+      //           actions: [
+      //             TextButton(
+      //               onPressed: () {
+      //                 Navigator.pop(context);
+      //               },
+      //               child: Text(
+      //                 'Okay',
+      //               ),
+      //             )
+      //           ],
+      //         );
+      //       });
+      // }
     } catch (e) {
       return showDialog(
           context: context,
@@ -364,7 +476,6 @@ class _PricingCardState extends State<PricingCard> {
                   style: TextStyle(color: Colors.black),
                 )),
           ),
-          
           Container(
             margin: EdgeInsets.symmetric(
               horizontal: MediaQuery.of(context).size.width * 0.04,
