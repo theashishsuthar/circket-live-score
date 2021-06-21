@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cricket_live_score/advertisement/ad_helper.dart';
+import 'package:cricket_live_score/advertisement/app_advert.dart';
 import 'package:cricket_live_score/constraints.dart';
 import 'package:cricket_live_score/main.dart';
 import 'package:cricket_live_score/screens/Homescreen.dart';
@@ -42,6 +43,7 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
 
   @override
   void initState() {
+    showAdvertisement(context);
     _loadInterstitialAd();
     _bannerAd = BannerAd(
       adUnitId: AdHelper.bannerAdUnitId!,
@@ -660,7 +662,7 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                                               MainAxisAlignment.spaceEvenly,
                                           children: [
                                             textWidget('R.R.R',
-                                                ' ${(double.parse(model.home.i2['tr']) - double.parse(model.home.i2['sc']))/(((double.parse(model.home.iov!).floor() * 6) - (double.parse(model.home.i2['ov']).floor() * 6 + ((double.parse(model.home.i2['ov']) % 1) * 10).floor()))/6 ).ceil()}'),
+                                                ' ${(double.parse(model.home.i2['tr']) - double.parse(model.home.i2['sc'])) / (((double.parse(model.home.iov!).floor() * 6) - (double.parse(model.home.i2['ov']).floor() * 6 + ((double.parse(model.home.i2['ov']) % 1) * 10).floor())) / 6).ceil()}'),
                                             //(double.parse(model.home.i2['tr']) - double.parse(model.home.i2['sc']))
                                             //
                                             //floor(Overs)*6 + floor((Overs%1)*10)
@@ -775,7 +777,7 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
                         ),
                       ),
                       Container(
-                        height: MediaQuery.of(context).size.height * 0.268,
+                        height: MediaQuery.of(context).size.height * 0.285,
                         width: double.infinity,
                         margin: EdgeInsets.all(
                             MediaQuery.of(context).size.height * 0.01),
@@ -1520,6 +1522,9 @@ class _ScoreDetailScreenState extends State<ScoreDetailScreen> {
       children: [
         detailsScreen(),
         adwidget(),
+        // Builder(
+        //   builder: showAdvertisement(context),
+        // ),
       ],
     );
   }
