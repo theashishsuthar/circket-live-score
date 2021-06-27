@@ -7,6 +7,35 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:962263162566:android:19016b3c715f4a04ed41c7",
+        "android_client_info": {
+          "package_name": "com.cricketlinemaster.sevenapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "962263162566-aoa5vlbuffo6pj1eka70opr2663sk1lh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCldUZg14iqAQwDA2FQObxZ0nHlVNx_zhM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "962263162566-aoa5vlbuffo6pj1eka70opr2663sk1lh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:962263162566:android:99a6da81dada66a8ed41c7",
         "android_client_info": {
           "package_name": "com.example.cricket_live_score"
